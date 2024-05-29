@@ -368,8 +368,6 @@ local function BankingForAddy()
         API.RandomSleep2(1200,300,600)
         States = 0        
     elseif API.PInArea(3227,2,3255,2,0) then
-        API.RandomSleep2(1200,300,600)
-        
         isAdaMine = false
         isDepositingAddy =false
         isDeposit = true
