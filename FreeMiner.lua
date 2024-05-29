@@ -254,19 +254,16 @@ local function GotoMiningGuild()
         API.RandomSleep2(1200,300,400)
         isRuneMine = true
         isLumiMine = false
-        print("Rune for!!")
     end
 
     if API.PInArea(3011,4,3215,4,0) and isRuneMine == true and isLumiMine == false then
         API.DoAction_WalkerW(WPOINT.new(3027 + math.random(-2, 2), 3336 + math.random(-2, 2), 0))
         API.RandomSleep2(1200,300,400)
-        print("Rune for!!")
     elseif API.PInArea(3027,4,3336,4,0) then
         API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder
     elseif API.PInArea(3021,8,9739,8,0) then
         print("Rune Area")
         States = 3
-        print("Rune for!!")
     end
 end
 
