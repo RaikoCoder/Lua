@@ -503,8 +503,6 @@ MiningCoalsBarb()
 MiningMithVarrock()
 MiningAddyRimmy()
 MiningAtMiningGuild()
-
-print(".State.",States ,"ismine",isAdaMine ,"orebox",oreBox, "isDeposit" , isDeposit, "not full", API.InvFull_())
 ::continue::
 idleCheck()
 API.RandomSleep2(1200,300,600)
