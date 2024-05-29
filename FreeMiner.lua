@@ -1,5 +1,6 @@
 local API =require("api")
 local LODESTONE = require("lodestones")
+startTime, afk = os.time(), os.time()
 MAX_IDLE_TIME_MINUTES = 5
 
 -----
