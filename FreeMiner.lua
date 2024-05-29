@@ -159,17 +159,20 @@ end
 
 
 local function GotoBurth()
-    if API.CheckAnim(10) then
+    if API.CheckAnim(5) then
         goto hello
     end
-    if not API.PInArea(2899,4,3544,4,0) and isBurthMine == false then
+    if not API.PInArea(2899,2,3544,2,0) and isBurthMine == false then
         LODESTONE.Burthope()
-        API.RandomSleep2(1200,300,600)
         isBurthMine = true
+        States = 1 
         print("Reach Burthope Walking to mining ")
-    elseif API.PInArea(2899,4,3544,4,0) and isBurthMine == true then
-        API.DoAction_WalkerW(WPOINT.new(2889 + math.random(-2, 2), 3503 + math.random(-2, 2), 0))
-    elseif API.PInArea(2889,3,3503,4,0) then
+    end
+    if API.PInArea(2899,2,3544,2,0) and isBurthMine == true and States == 1 then
+        goToTile(2889,3503,0)
+        States = 2
+    end
+    if API.PInArea(2889,2,3503,2,0) and States == 2 then
             API.DoAction_Object1(0x39,API.OFF_ACT_GeneralObject_route0,{ 66876 },50)
             if API.PInArea(2292,3,4516,3,0) then
               isBurthMine = true
@@ -298,32 +301,19 @@ end
 
 
 
+
 local function MiningAtBurthope()
         if selectedOre == "Tin" or selectedOre == "Iron" or selectedOre == "Copper" then
-            if API.InvItemFound2({44779,44781,44783,44785,44787,44789, 44791,44793,44795,44797}) then
-                oreBox = true
-            end
+        if API.InvItemFound2({44779,44781,44783,44785,44787,44789, 44791,44793,44795,44797}) then oreBox = true end
             GotoBurth()
         if isBurthMine == true then
-            
-            if not API.InvFull_()then
-                EnterMine()
-                MineOre()
-            end
-            if API.InvFull_() then
-                ExitMine()
-                API.RandomSleep2(600, 0, 0)
-                DepositOres()
-                if not API.InvFull_() then
-                    EnterMine()
-                    API.RandomSleep2(600, 0, 0)
-                end
-            end
-        end
-    end
-    
-end
-
+        if not API.InvFull_()then MineOre() end
+        if API.InvFull_() then ExitMine()
+            API.RandomSleep2(600, 0, 0)
+            DepositOres()
+        if not API.InvFull_() then EnterMine()
+            API.RandomSleep2(600, 0, 0)
+                end end end end end
 local function MiningCoalsBarb()
     if selectedOre == "Coal" then
         if API.InvItemFound2({44781,44783,44785,44787,44789, 44791,44793,44795,44797}) then
