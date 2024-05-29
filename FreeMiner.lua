@@ -168,8 +168,8 @@ local function GotoBurth()
         isBurthMine = true
         print("Reach Burthope Walking to mining ")
     elseif API.PInArea(2899,4,3544,4,0) and isBurthMine == true then
-            goToTile(2895,3517,0) --closer to mine
-    elseif API.PInArea(2895,4,3517,4,0) then
+        API.DoAction_WalkerW(WPOINT.new(2889 + math.random(-2, 2), 3503 + math.random(-2, 2), 0))
+    elseif API.PInArea(2889,3,3503,4,0) then
             API.DoAction_Object1(0x39,API.OFF_ACT_GeneralObject_route0,{ 66876 },50)
             if API.PInArea(2292,3,4516,3,0) then
               isBurthMine = true
@@ -190,13 +190,10 @@ local function GotoEdge()
         isDeposit = false
         States = 1
        elseif API.PInArea(3067,4,3505,4,0) and isCoalmine == true and States == 1  then
+        API.DoAction_WalkerW(WPOINT.new(3080 + math.random(-2, 2), 3422 + math.random(-2, 2), 0))
         print("Going to barb Village")
-            goToTile(3071,3456,0)
-        elseif API.PInArea(3071,4,3456,4,0) and isCoalmine == true and States == 1  then
-            goToTile(3080,3422,0)
-            print("Reached Barb Village")
-            States = 2
-       elseif API.PInArea(3080,4,3422,4,0) and isCoalmine == true and States == 2  then
+        States = 2
+       elseif API.PInArea(3080,6,3422,6,0) and isCoalmine == true and States == 2  then
             isCoalmine = true
             States = 3
        end
