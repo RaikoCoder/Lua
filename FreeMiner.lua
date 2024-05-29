@@ -13,6 +13,8 @@ local countore = 0
 local isBurthMine, isCoalmine , isMithmine , isAdaMine, isRuneMine,isLumiMine  = false,false,false,false,false,false
 local isDepositingAddy = false
 ----
+
+
 local function goToTile(x, y, z) --random coord selection
     if x and y and z then
         math.randomseed(os.time())
@@ -356,12 +358,13 @@ local function BankingForAddy()
     if API.PInArea(3233,4,3221,4,0) and isAdaMine == true and isDeposit == false then
         API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route1,{ 113261 },50) --lumby forge 
         API.RandomSleep2(1200,300,600)
-        States = 0        
-    elseif API.PInArea(3227,2,3255,2,0) then
-        isAdaMine = false
-        isDepositingAddy =false
+        States = 0 
         isDeposit = true
+        isAdaMine = false
+    end      
+    if API.PInArea(3227,2,3255,2,0) and (not API.InvFull_()) and States == 0 and isDeposit== true then
         GotoAddy()
+        isDeposit = false 
     end
 end
 
@@ -500,6 +503,8 @@ MiningCoalsBarb()
 MiningMithVarrock()
 MiningAddyRimmy()
 MiningAtMiningGuild()
+
+print(".State.",States ,"ismine",isAdaMine ,"orebox",oreBox, "isDeposit" , isDeposit, "not full", API.InvFull_())
 ::continue::
 idleCheck()
 API.RandomSleep2(1200,300,600)
