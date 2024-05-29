@@ -359,30 +359,24 @@ local function BankingforMith()
 end
 
 local function BankingForAddy()
-
-    if API.PInArea(3233,4,3221,4,0) and isAdaMine == true and isDepositingAddy == true then
-        goToTile(3225,3253,0)
+    if not API.PInArea(3233,4,3221,4,0) and isAdaMine == true and States ==4 then
+        LODESTONE.Lumbridge()
         API.RandomSleep2(1200,300,600)
-    elseif API.PInArea(3225,4,3253,4,0) and isDepositingAddy ==true then
-            API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route1,{ 113261 },50) --lumby forge 
-            API.RandomSleep2(600,300,300)
-            States = 0 
-            isAdaMine = false
-            isDepositingAddy =false
-            isDeposit = true
-    elseif not API.PInArea(3233,4,3221,4,0) and isAdaMine == true then
-                LODESTONE.Lumbridge()
-                API.RandomSleep2(1200,300,600)
-                print("Reached Lumby, going to furnace")
-                isAdaMine = true
-                isDepositingAddy = true
-            end 
-
-    if API.PInArea(3227,5,3255,5,0) and isDeposit ==true then
+    end
+    if API.PInArea(3233,4,3221,4,0) and isAdaMine == true and isDeposit == false then
+        API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route1,{ 113261 },50) --lumby forge 
+        API.RandomSleep2(1200,300,600)
+        States = 0        
+    elseif API.PInArea(3227,2,3255,2,0) then
+        API.RandomSleep2(1200,300,600)
+        
+        isAdaMine = false
+        isDepositingAddy =false
+        isDeposit = true
         GotoAddy()
     end
-
 end
+
 local function BankingForRune()
     if isRuneMine == true and isDeposit == false and States == 4 then
         if API.PInArea(3033,6,9736,6,0) then
