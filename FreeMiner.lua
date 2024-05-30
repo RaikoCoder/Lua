@@ -1,3 +1,13 @@
+
+--[[
+Version 0.01 Edited Some Logic as it was abit random
+took out some other stuff that's not needed
+made sure the orebox get reseted.
+
+only Thing that was tested Runite and Luminite
+will do the others later on 
+
+]]
 local API =require("api")
 local LODESTONE = require("lodestones")
 startTime, afk = os.time(), os.time()
@@ -70,7 +80,7 @@ local function idleCheck()
     end
 end
 local function OresboxCheck()
-    if API.Invfreecount_() <= 25 then
+    if API.Invfreecount_() <= 3 then
         if oreBox ==  true and countore < 6 then
             print("Filling ore Box")
             API.DoAction_Inventory2(oreBoxes,0, 1, API.OFF_ACT_GeneralInterface_route)
