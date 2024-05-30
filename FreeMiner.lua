@@ -1,12 +1,8 @@
 
 --[[
-Version 0.01 Edited Some Logic as it was abit random
-took out some other stuff that's not needed
-made sure the orebox get reseted.
-
-only Thing that was tested Runite and Luminite
-will do the others later on 
-
+Version 0.01 - Fixed Addy Bugs
+v0.05 - added orikalchite , Fixed the Orebox not filling whenever banked.  Added another safe
+v0.10 - cleaned up codes and fix how some movement
 ]]
 local API =require("api")
 local LODESTONE = require("lodestones")
@@ -19,6 +15,7 @@ local oreBox = false
 local isDeposit = false
 local countore = 0
 local isBurthMine, isCoalmine , isMithmine , isAdaMine, isRuneMine,isLumiMine  = false,false,false,false,false,false
+local isOrikalchite = false
 ----
 
 local function goToTile(x, y, z) --random coord selection
@@ -366,16 +363,17 @@ local function GotoMiningGuild()
         API.RandomSleep2(600, 600, 600)
         goto hello
     end
-    if selectedOre == "Runite"  then
+    if selectedOre == "Runite" or selectedOre == "Orikalchite" then
         
-    if not API.PInArea(3011,4,3215,4,0) and isRuneMine == false then
+    if not API.PInArea(3011,4,3215,4,0) and isRuneMine == false or isOrikalchite == false then
         LODESTONE.PortSarim()
         API.RandomSleep2(1200,300,400)
         isRuneMine = true
         isLumiMine = false
+        isOrikalchite = true
     end
 
-    if API.PInArea(3011,4,3215,4,0) and isRuneMine == true and isLumiMine == false then
+    if API.PInArea(3011,4,3215,4,0) and isRuneMine == true or isOrikalchite == true and isLumiMine == false  then
         API.DoAction_WalkerW(WPOINT.new(3027 + math.random(-2, 2), 3336 + math.random(-2, 2), 0))
         API.RandomSleep2(1200,300,400)
     elseif API.PInArea(3027,4,3336,4,0) then
@@ -412,7 +410,7 @@ end
 
 
 local function BankingForRune()
-    if isRuneMine == true and isDeposit == false then
+    if isRuneMine == true and  isDeposit == false or isOrikalchite == true then
         if API.PInArea(3033,6,9736,6,0) then
             API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 6226 },50) --Ladder  going up
             API.RandomSleep2(1200,300,400)
@@ -452,17 +450,18 @@ local function BankingForLuminite()
 end
 
 local function MiningAtMiningGuild()
-    if selectedOre == "Runite"  then
+    if selectedOre == "Runite" or selectedOre == "Orikalchite"  then
         if API.InvItemFound2({44785,44787,44789, 44791,44793,44795,44797}) then
             oreBox = true
         end
         GotoMiningGuild()
-        if isRuneMine == true  then
+        if isRuneMine == true or isOrikalchite == true  then
             if not API.InvFull_() then
                 MineOre()
             end
         end
         if API.InvFull_() then
+            isOrikalchite = true
             isRuneMine = true
             isDeposit = false 
             BankingForRune()
