@@ -367,7 +367,7 @@ local function GotoMiningGuild()
         
     if not API.PInArea(3011,4,3215,4,0) and isRuneMine == false or isOrikalchite == false then
         LODESTONE.PortSarim()
-        API.RandomSleep2(1200,300,400)
+        API.RandomSleep2(3600,300,400)
         isRuneMine = true
         isLumiMine = false
         isOrikalchite = true
@@ -386,7 +386,7 @@ end
 if selectedOre == "Luminite"  then
     if not API.PInArea(3011,4,3215,4,0) and isLumiMine == false then
         LODESTONE.PortSarim()
-        API.RandomSleep2(1200,300,400)
+       API.RandomSleep2(3600,300,400)
         isLumiMine = true
         isRuneMine =false 
     end
