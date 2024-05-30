@@ -1,9 +1,3 @@
-
---[[
-Version 0.01 - Fixed Addy Bugs
-v0.05 - added orikalchite , Fixed the Orebox not filling whenever banked.  Added another safe
-v0.10 - cleaned up codes and fix how some movement
-]]
 local API =require("api")
 local LODESTONE = require("lodestones")
 startTime, afk = os.time(), os.time()
@@ -77,7 +71,7 @@ local function idleCheck()
     end
 end
 local function OresboxCheck()
-    if API.Invfreecount_() <= 3 then
+    if API.Invfreecount_() <= 25 then
         if oreBox ==  true and countore < 6 then
             print("Filling ore Box")
             API.DoAction_Inventory2(oreBoxes,0, 1, API.OFF_ACT_GeneralInterface_route)
@@ -419,12 +413,13 @@ local function BankingForRune()
                 isDeposit = true
                 countore = 0
             end 
+            if API.PInArea(3043,4,3338,4,0) and isDeposit == true then
+                API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder 
+                  API.RandomSleep2(1200,300,400)
+              end
+        end
     end
-    if API.PInArea(3043,4,3338,4,0) and isDeposit == true then
-        API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder 
-          API.RandomSleep2(1200,300,400)
-      end
-end
+   
 local function BankingForLuminite()
     if isLumiMine == true and isDeposit == false then
         if API.PInArea(3039,4,9763,4,0) then
@@ -505,8 +500,8 @@ MiningMithVarrock()
 MiningAddyRimmy()
 MiningAtMiningGuild()
 
-
-::continue::
 idleCheck()
+::continue::
+
 API.RandomSleep2(1200,300,600)
 end
