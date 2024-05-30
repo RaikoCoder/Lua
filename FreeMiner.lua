@@ -413,13 +413,14 @@ local function BankingForRune()
                 isDeposit = true
                 countore = 0
             end 
-            if API.PInArea(3043,4,3338,4,0) and isDeposit == true then
-                API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder 
-                  API.RandomSleep2(1200,300,400)
-              end
         end
     end
-   
+   local function backtorune()
+    if API.PInArea(3043,4,3338,4,0) and isDeposit == true then
+        API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder 
+          API.RandomSleep2(1200,300,400)
+      end
+   end
 local function BankingForLuminite()
     if isLumiMine == true and isDeposit == false then
         if API.PInArea(3039,4,9763,4,0) then
@@ -434,15 +435,15 @@ local function BankingForLuminite()
             countore = 0
             isDeposit =true
         end
-        
-    if API.PInArea(3043,4,3338,4,0) and isDeposit == true then
-    API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder 
-    API.RandomSleep2(1200,300,400)
-    API.DoAction_Object1(0x31,API.OFF_ACT_GeneralObject_route0,{ 2112 },50) --Door 
-    end
     end
 end
-
+    local function backtolumi()
+        if API.PInArea(3043,4,3338,4,0) and isDeposit == true then
+            API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder 
+            API.RandomSleep2(1200,300,400)
+            API.DoAction_Object1(0x31,API.OFF_ACT_GeneralObject_route0,{ 2112 },50) --Door 
+            end
+        end
 local function MiningAtMiningGuild()
     if selectedOre == "Runite" or selectedOre == "Orikalchite"  then
         if API.InvItemFound2({44785,44787,44789, 44791,44793,44795,44797}) then
@@ -451,6 +452,7 @@ local function MiningAtMiningGuild()
         GotoMiningGuild()
         if isRuneMine == true or isOrikalchite == true  then
             if not API.InvFull_() then
+                backtorune()
                 MineOre()
             end
         end
@@ -471,6 +473,7 @@ local function MiningAtMiningGuild()
         GotoMiningGuild()
         if isLumiMine == true then
             if not API.InvFull_() then
+                backtolumi()
                 MineOre()
             end
         end
