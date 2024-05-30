@@ -364,44 +364,43 @@ local function GotoMiningGuild()
         goto hello
     end
     if selectedOre == "Runite" or selectedOre == "Orikalchite" then
+        if API.PInArea(3011,4,3215,4,0) and isLumiMine == false  then
+            API.DoAction_WalkerW(WPOINT.new(3027 + math.random(-2, 2), 3336 + math.random(-2, 2), 0))
+            API.RandomSleep2(1200,300,400)
+        elseif API.PInArea(3027,4,3336,4,0) then
+            API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder
+        elseif API.PInArea(3021,8,9739,8,0) then
+            print("Rune Area")
+        end
+    end
         
     if not API.PInArea(3011,4,3215,4,0) and isRuneMine == false or isOrikalchite == false then
         LODESTONE.PortSarim()
-        API.RandomSleep2(3600,300,400)
         isRuneMine = true
         isLumiMine = false
         isOrikalchite = true
-    end
-
-    if API.PInArea(3011,4,3215,4,0) and isRuneMine == true or isOrikalchite == true and isLumiMine == false  then
-        API.DoAction_WalkerW(WPOINT.new(3027 + math.random(-2, 2), 3336 + math.random(-2, 2), 0))
-        API.RandomSleep2(1200,300,400)
-    elseif API.PInArea(3027,4,3336,4,0) then
-        API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder
-    elseif API.PInArea(3021,8,9739,8,0) then
-        print("Rune Area")
-    end
 end
 
 if selectedOre == "Luminite"  then
-    if not API.PInArea(3011,4,3215,4,0) and isLumiMine == false then
-        LODESTONE.PortSarim()
-       API.RandomSleep2(3600,300,400)
-        isLumiMine = true
-        isRuneMine =false 
+   
+        if API.PInArea(3011,4,3215,4,0) and isLumiMine == true and isRuneMine == false then
+            API.DoAction_WalkerW(WPOINT.new(3027 + math.random(-2, 2), 3336 + math.random(-2, 2), 0))
+            API.RandomSleep2(1200,300,400)
+        elseif API.PInArea(3027,4,3336,4,0) then
+            API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder 
+            API.RandomSleep2(1200,300,400)
+        elseif API.PInArea(3021,8,9739,8,0) then
+            API.DoAction_Object1(0x31,API.OFF_ACT_GeneralObject_route0,{ 2112 },50) --Door
+        elseif API.PInArea(3046,3,9757,3,0) then
+            print("Luminite Area")
+        end
+        if not API.PInArea(3011,4,3215,4,0) and isLumiMine == false then
+            LODESTONE.PortSarim()
+            isLumiMine = true
+            isRuneMine =false 
     end
 
-    if API.PInArea(3011,4,3215,4,0) and isLumiMine == true and isRuneMine == false then
-        API.DoAction_WalkerW(WPOINT.new(3027 + math.random(-2, 2), 3336 + math.random(-2, 2), 0))
-        API.RandomSleep2(1200,300,400)
-    elseif API.PInArea(3027,4,3336,4,0) then
-        API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder 
-        API.RandomSleep2(1200,300,400)
-    elseif API.PInArea(3021,8,9739,8,0) then
-        API.DoAction_Object1(0x31,API.OFF_ACT_GeneralObject_route0,{ 2112 },50) --Door
-    elseif API.PInArea(3046,3,9757,3,0) then
-        print("Luminite Area")
-    end
+    
 end
     ::hello::
     API.RandomSleep2(1200,500,400)
