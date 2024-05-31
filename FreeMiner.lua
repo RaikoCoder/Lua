@@ -132,7 +132,7 @@ end
 
 local function MineOre()
     if not API.InvFull_() then
-        if API.Invfreecount_() <= 2 then
+        if API.Invfreecount_() <= 4 then
             OresboxCheck()
         end
     if not API.IsPlayerAnimating_(plr, 3) then
