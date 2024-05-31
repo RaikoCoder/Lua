@@ -1,4 +1,17 @@
+--[[
+V0.01 Edited some bugs
+v0.05 added Orikalchite, Changes how the orebox work. 
+v0.10 Edited the Script , cleaned it up abit . fix how everything runs 
+For now Everything should work
+iron,copper,tin (Abit slow running there) --checking for fix
+coal,mith,adamantite, rune and orikalchite --works fine
+luminite -  abit funky with the door. trying to fix
+
+TO USE 
+Empty inventory with Orebox or none at all~ pick whatever ore you want thats available
+]]--
 local API =require("api")
+local UTILS = require("utils")
 local LODESTONE = require("lodestones")
 startTime, afk = os.time(), os.time()
 MAX_IDLE_TIME_MINUTES = 5
@@ -30,8 +43,6 @@ local function goToTile(x, y, z) --random coord selection
     end
 end
 
-
-
 local ores = {
     Copper = {113028, 113027, 113026},
     Tin = {113031, 113030},
@@ -45,7 +56,37 @@ local ores = {
     --Drakolith = {113071, 113072, 113073},
    -- Banite = {113140, 113141, 113142},
     --Necrite = {113143, 113144, 113145}
-   
+}
+local oresID = {
+    COPPER = 436,
+    TIN = 438,
+    IRON = 440,
+    SILVER = 442,
+    GOLD = 444,
+    MITHRIL = 447,
+    ADAMANTITE = 449,
+    RUNITE = 451,
+    COAL = 453,
+    BANITE = 21778,
+    LUMINITE = 44820,
+    ORICHALCITE = 44822,
+    DRAKOLITH = 44824,
+    NECRITE = 44826,
+    PHASMATITE = 44828,
+    LIGHT_ANIMICA = 44830,
+    DARK_ANIMICA = 44832
+}
+local GetAmountOres = {
+
+    Iron = UTILS.getAmountInOrebox({oresID}) ,
+    Steel = UTILS.getAmountInOrebox({oresID}) ,
+    Mith = UTILS.getAmountInOrebox({oresID}) ,
+    Addy = UTILS.getAmountInOrebox({oresID}) ,
+    Rune = UTILS.getAmountInOrebox({oresID}) ,
+    Orikalkum = UTILS.getAmountInOrebox({oresID}) ,
+    Necro = UTILS.getAmountInOrebox({oresID}) ,
+    Bane = UTILS.getAmountInOrebox({oresID}) ,
+    Elder = UTILS.getAmountInOrebox({oresID}) ,
 }
 
 local function getDictKeys(dict)
@@ -71,7 +112,7 @@ local function idleCheck()
     end
 end
 local function OresboxCheck()
-    if API.Invfreecount_() <= 25 then
+    if UTILS.getAmountInOrebox() <= 120 then
         if oreBox ==  true and countore < 6 then
             print("Filling ore Box")
             API.DoAction_Inventory2(oreBoxes,0, 1, API.OFF_ACT_GeneralInterface_route)
@@ -91,10 +132,6 @@ local function RetrieveRandomOreId()
 end
 
 local function MineOre()
-
-    if API.Invfreecount_()  <= 25 then
-        OresboxCheck()
-        end
     if not API.InvFull_() then
     if not API.IsPlayerAnimating_(plr, 3) then
         API.RandomSleep2(600, 600, 600)    
@@ -211,11 +248,12 @@ end
 
 local function MiningCoalsBarb()
     if selectedOre == "Coal" then
+       GotoEdge()
         if API.InvItemFound2({44781,44783,44785,44787,44789, 44791,44793,44795,44797}) then
             oreBox = true
         end
-        GotoEdge()
     if isCoalmine == true then
+        
         if not API.InvFull_() then
             MineOre()
         end
@@ -239,6 +277,7 @@ local function GotoMith()
         API.RandomSleep2(1200,300,600)
         isMithmine = true
         isDeposit = false
+       
     elseif API.PInArea(3214,4,3376,4,0) and isMithmine == true then
         print("Reach Varrock, Going to Mithril Area")
         goToTile(3187,3375,0) -- get close to mine
@@ -261,20 +300,24 @@ local function BankingforMith()
             isMithmine = false
             countore = 0
     end
-    if API.PInArea(3183,4,3423,4,0) and isDeposit == true then
-        GotoMith()
-    end
+   
 end
 local function MiningMithVarrock()
-
+   
     if selectedOre == "Mithril" then
+        GotoMith()
         if API.InvItemFound2({44783,44785,44787,44789, 44791,44793,44795,44797}) then
             oreBox = true
         end
-        GotoMith()
+        
+        
     if isMithmine == true then
+        
         if not API.InvFull_() then
             MineOre()
+            if API.PInArea(3183,4,3423,4,0) and isDeposit == true then
+                GotoMith()
+            end
         end
     end
     if API.InvFull_() then
@@ -297,9 +340,8 @@ local function GotoAddy()
     if not API.PInArea(3011,4,3215,4,0) and isAdaMine == false then
        LODESTONE.PortSarim()
        API.RandomSleep2(1200,300,600)
-        isAdaMine = true
+       isAdaMine = true
         isDeposit =false
-       
     elseif API.PInArea(3011,4,3215,4,0) and isAdaMine == true then
         print("Reach Port Sarim, Going to Adamantite Area")
         goToTile(2968,3229,0) -- adamant Area
@@ -321,21 +363,23 @@ local function BankingForAddy()
         isAdaMine = false
         countore = 0
     end      
-    if API.PInArea(3227,2,3255,2,0) and (not API.InvFull_()) and isDeposit== true then
-        GotoAddy()
-        isDeposit = false 
-    end
+   
 end
 local function MiningAddyRimmy()
-
+  
     if selectedOre == "Adamantite" then
+        GotoAddy()
         if API.InvItemFound2({44785,44787,44789, 44791,44793,44795,44797}) then
             oreBox = true
         end
-        GotoAddy()
         if isAdaMine == true then
+            
             if not API.InvFull_() then
                 MineOre()
+                if API.PInArea(3227,2,3255,2,0) and isDeposit== true then
+                    GotoAddy()
+                    isDeposit = false 
+                end
             end
         end
         if API.InvFull_()  then
@@ -359,6 +403,8 @@ local function GotoMiningGuild()
     end
     if selectedOre == "Runite" or selectedOre == "Orikalchite" then
         if API.PInArea(3011,4,3215,4,0) and isLumiMine == false  then
+            isRuneMine = true
+            isOrikalchite = true
             API.DoAction_WalkerW(WPOINT.new(3027 + math.random(-2, 2), 3336 + math.random(-2, 2), 0))
             API.RandomSleep2(1200,300,400)
         elseif API.PInArea(3027,4,3336,4,0) then
@@ -370,38 +416,17 @@ local function GotoMiningGuild()
         
     if not API.PInArea(3011,4,3215,4,0) and isRuneMine == false or isOrikalchite == false then
         LODESTONE.PortSarim()
-        isRuneMine = true
-        isLumiMine = false
-        isOrikalchite = true
-end
-
-if selectedOre == "Luminite"  then
-   
-        if API.PInArea(3011,4,3215,4,0) and isLumiMine == true and isRuneMine == false then
-            API.DoAction_WalkerW(WPOINT.new(3027 + math.random(-2, 2), 3336 + math.random(-2, 2), 0))
-            API.RandomSleep2(1200,300,400)
-        elseif API.PInArea(3027,4,3336,4,0) then
-            API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder 
-            API.RandomSleep2(1200,300,400)
-        elseif API.PInArea(3021,8,9739,8,0) then
-            API.DoAction_Object1(0x31,API.OFF_ACT_GeneralObject_route0,{ 2112 },50) --Door
-        elseif API.PInArea(3046,3,9757,3,0) then
-            print("Luminite Area")
-        end
-        if not API.PInArea(3011,4,3215,4,0) and isLumiMine == false then
-            LODESTONE.PortSarim()
-            isLumiMine = true
-            isRuneMine =false 
-    end
-
-    
 end
     ::hello::
     API.RandomSleep2(1200,500,400)
     
 end
-
-
+local function backtorune()
+    if API.PInArea(3043,4,3338,4,0) and isDeposit == true then
+        API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder 
+          API.RandomSleep2(1200,300,400)
+      end
+   end
 local function BankingForRune()
     if isRuneMine == true and  isDeposit == false or isOrikalchite == true then
         if API.PInArea(3033,6,9736,6,0) then
@@ -415,41 +440,88 @@ local function BankingForRune()
             end 
         end
     end
-   local function backtorune()
-    if API.PInArea(3043,4,3338,4,0) and isDeposit == true then
-        API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder 
-          API.RandomSleep2(1200,300,400)
-      end
-   end
-local function BankingForLuminite()
-    if isLumiMine == true and isDeposit == false then
-        if API.PInArea(3039,4,9763,4,0) then
-            API.DoAction_Object1(0x31,API.OFF_ACT_GeneralObject_route0,{ 2112 },50) --Door 
+local function gotoLuminite()
+    if API.CheckAnim(10) then
+        API.RandomSleep2(600, 600, 600)
+        goto hello
+    end
+    if selectedOre == "Luminite"  then
+       
+        if API.PInArea(3011,4,3215,4,0) and isLumiMine == false and isRuneMine == false then
+            API.DoAction_WalkerW(WPOINT.new(3027 + math.random(-2, 2), 3336 + math.random(-2, 2), 0))
             API.RandomSleep2(1200,300,400)
-        elseif API.PInArea(3046,3,9757,3,0) then
-            API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 6226 },50) --Ladder going up
+            isLumiMine = true
+        elseif API.PInArea(3027,4,3336,4,0) then
+            API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder 
             API.RandomSleep2(1200,300,400)
+        elseif API.PInArea(3021,1,9739,1,0) then
+            goToTile(3046,9756,0)
+        elseif API.PInArea(3046,2,9756,2,0)  and not API.InvFull_() then
+            API.DoAction_Object1(0x31,API.OFF_ACT_GeneralObject_route0,{ 2112 },50) --Door
+            API.RandomSleep2(800,500,400)
+            print("Luminite Area")
         end
+    end
+        if not API.PInArea(3011,4,3215,4,0) and isLumiMine == false then
+            LODESTONE.PortSarim()
+        end
+    ::hello::
+    API.RandomSleep2(1200,500,400)
+    
+end
+local function backtolumi()
+    if API.CheckAnim(10) then
+        API.RandomSleep2(600, 600, 600)
+        goto hello
+    end
+    if API.PInArea(3043,4,3338,4,0) then
+        API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder 
+        API.RandomSleep2(1200,300,400)
+    elseif API.PInArea(3021,1,9739,1,0) then
+        goToTile(3046,9756,0)
+    elseif API.PInArea(3046,1,9756,1,0) then
+        API.DoAction_Object1(0x31,API.OFF_ACT_GeneralObject_route0,{ 2112 },50) --Door
+    elseif API.PInArea(3046,3,9757,3,0) then
+        print("Luminite Area")
+    end
+        ::hello::
+    API.RandomSleep2(1200,500,400)
+end
+
+
+local function BankingForLuminite()
+    if API.CheckAnim(10) then
+        API.RandomSleep2(600, 600, 600)
+        goto hello
+    end
+    if isLumiMine == true and isDeposit == false then
         if API.PInArea(3021,4,3339,4,0) and isDeposit == false   then
             API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route1,{ 113265 },50) --Furnce
             countore = 0
             isDeposit =true
+        end  -- 
+        if API.PInArea(3045,2,9755,2,0) then
+            -- goToTile(3021,9739,0)
+            -- API.RandomSleep2(1200,300,400)
+            API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 6226 },50) --Ladder going up
         end
-    end
-end
-    local function backtolumi()
-        if API.PInArea(3043,4,3338,4,0) and isDeposit == true then
-            API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder 
-            API.RandomSleep2(1200,300,400)
+        if API.PInArea(3037,3,9763,2,0) and (not API.PInArea(3045,2,9755,2,0)) then
             API.DoAction_Object1(0x31,API.OFF_ACT_GeneralObject_route0,{ 2112 },50) --Door 
-            end
-        end
+            API.RandomSleep2(1800,300,400)
+        end 
+    end
+    ::hello::
+    API.RandomSleep2(1200,500,400)
+end
+
 local function MiningAtMiningGuild()
+  
     if selectedOre == "Runite" or selectedOre == "Orikalchite"  then
+        GotoMiningGuild()
         if API.InvItemFound2({44785,44787,44789, 44791,44793,44795,44797}) then
             oreBox = true
         end
-        GotoMiningGuild()
+     
         if isRuneMine == true or isOrikalchite == true  then
             if not API.InvFull_() then
                 backtorune()
@@ -467,14 +539,18 @@ local function MiningAtMiningGuild()
     end
 
     if selectedOre == "Luminite" then
+      gotoLuminite()
         if API.InvItemFound2({44785,44787,44789, 44791,44793,44795,44797}) then
             oreBox = true
         end
-        GotoMiningGuild()
+        
         if isLumiMine == true then
+            
             if not API.InvFull_() then
                 backtolumi()
-                MineOre()
+                if API.PInArea(3046,3,9757,3,0) then
+                    MineOre()
+                end
             end
         end
         if API.InvFull_() then
@@ -496,7 +572,8 @@ while (API.Read_LoopyLoop()) do
     API.RandomSleep2(500,500,400)
     goto continue
  end
- 
+ print("Start Banking: ",API.PInArea(3037,3,9763,2,0))
+print("At the door: ",API.PInArea(3045,2,9755,2,0) )
 MiningAtBurthope()
 MiningCoalsBarb()
 MiningMithVarrock()
