@@ -566,8 +566,11 @@ end
 --end of orikalkum 
 
 
+
 API.SetDrawTrackedSkills(true)
 while (API.Read_LoopyLoop()) do
+    idleCheck()
+   API.DoRandomEvents() 
  if API.ReadPlayerMovin2() then
     API.RandomSleep2(500,500,400)
     goto continue
@@ -578,7 +581,7 @@ MiningMithVarrock()
 MiningAddyRimmy()
 MiningAtMiningGuild()
 
-idleCheck()
+
 ::continue::
 
 API.RandomSleep2(1200,300,600)
