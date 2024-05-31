@@ -112,7 +112,7 @@ local function idleCheck()
     end
 end
 local function OresboxCheck()
-    if UTILS.getAmountInOrebox() <= 120 then
+    
         if oreBox ==  true and countore < 6 then
             print("Filling ore Box")
             API.DoAction_Inventory2(oreBoxes,0, 1, API.OFF_ACT_GeneralInterface_route)
@@ -125,7 +125,6 @@ local function OresboxCheck()
             return
         end
     end
-end
 local function RetrieveRandomOreId()
     local tbl = ores[selectedOre]
     return tbl[math.random(1, #tbl)]
@@ -133,6 +132,9 @@ end
 
 local function MineOre()
     if not API.InvFull_() then
+        if API.Invfreecount_() <= 2 then
+            OresboxCheck()
+        end
     if not API.IsPlayerAnimating_(plr, 3) then
         API.RandomSleep2(600, 600, 600)    
         if not API.IsPlayerAnimating_(plr, 2) then
@@ -566,11 +568,8 @@ end
 --end of orikalkum 
 
 
-
 API.SetDrawTrackedSkills(true)
 while (API.Read_LoopyLoop()) do
-    idleCheck()
-   API.DoRandomEvents() 
  if API.ReadPlayerMovin2() then
     API.RandomSleep2(500,500,400)
     goto continue
@@ -581,7 +580,7 @@ MiningMithVarrock()
 MiningAddyRimmy()
 MiningAtMiningGuild()
 
-
+idleCheck()
 ::continue::
 
 API.RandomSleep2(1200,300,600)
