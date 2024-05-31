@@ -572,8 +572,6 @@ while (API.Read_LoopyLoop()) do
     API.RandomSleep2(500,500,400)
     goto continue
  end
- print("Start Banking: ",API.PInArea(3037,3,9763,2,0))
-print("At the door: ",API.PInArea(3045,2,9755,2,0) )
 MiningAtBurthope()
 MiningCoalsBarb()
 MiningMithVarrock()
