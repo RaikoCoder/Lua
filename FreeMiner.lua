@@ -132,7 +132,7 @@ end
 
 local function MineOre()
     if not API.InvFull_() then
-        if API.Invfreecount_() <= 4 then
+        if API.Invfreecount_() <= 3 then
             OresboxCheck()
         end
     if not API.IsPlayerAnimating_(plr, 3) then
@@ -317,9 +317,6 @@ local function MiningMithVarrock()
         
         if not API.InvFull_() then
             MineOre()
-            if API.PInArea(3183,4,3423,4,0) and isDeposit == true then
-                GotoMith()
-            end
         end
     end
     if API.InvFull_() then
