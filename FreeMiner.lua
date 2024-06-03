@@ -308,7 +308,7 @@ local function MiningMithVarrock()
    
     if selectedOre == "Mithril" then
         GotoMith()
-        if API.InvItemFound2({44783,44785,44787,44789, 44791,44793,44795,44797}) then
+        if API.InvItemFound2({44785,44787,44789, 44791,44793,44795,44797}) then
             oreBox = true
         end
         
@@ -368,7 +368,7 @@ local function MiningAddyRimmy()
   
     if selectedOre == "Adamantite" then
         GotoAddy()
-        if API.InvItemFound2({44785,44787,44789, 44791,44793,44795,44797}) then
+        if API.InvItemFound2({44787,44789, 44791,44793,44795,44797}) then
             oreBox = true
         end
         if isAdaMine == true then
@@ -517,7 +517,7 @@ local function MiningAtMiningGuild()
   
     if selectedOre == "Runite" or selectedOre == "Orikalchite"  then
         GotoMiningGuild()
-        if API.InvItemFound2({44785,44787,44789, 44791,44793,44795,44797}) then
+        if API.InvItemFound2({44789, 44791,44793,44795,44797}) then
             oreBox = true
         end
      
@@ -539,7 +539,7 @@ local function MiningAtMiningGuild()
 
     if selectedOre == "Luminite" then
       gotoLuminite()
-        if API.InvItemFound2({44785,44787,44789, 44791,44793,44795,44797}) then
+        if API.InvItemFound2({44787,44789, 44791,44793,44795,44797}) then
             oreBox = true
         end
         
