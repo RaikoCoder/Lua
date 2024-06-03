@@ -563,10 +563,22 @@ local function MiningAtMiningGuild()
 end
 
 --end of orikalkum 
-
+local function isLoggedout()
+    if API.GetGameState2() == 1 or API.GetGameState2() == 2  then
+        if API.GetGameState2() == 1 then
+            print(os.date().." LOGGED out")
+        end
+        if API.GetGameState2() == 2 then
+            print(os.date().." Lobbied")
+        end
+        API.Write_LoopyLoop(false)
+    end
+    
+end
 
 API.SetDrawTrackedSkills(true)
 while (API.Read_LoopyLoop()) do
+    isLoggedout()
  if API.ReadPlayerMovin2() then
     API.RandomSleep2(500,500,400)
     goto continue
@@ -579,6 +591,7 @@ MiningAtMiningGuild()
 
 idleCheck()
 ::continue::
+
 
 API.RandomSleep2(1200,300,600)
 end
