@@ -1,15 +1,10 @@
 --[[
-
+EVERYTHING SHOULD WORK . IF NOT TELL ME :D 
 v0.20 Fixed Luminite as it wasnt mining at all just go to spot ~ 
 v0.10 Edited the Script , cleaned it up abit . fix how everything runs 
 v0.05 added Orikalchite, Changes how the orebox work. 
 V0.01 Edited some bugs
 
-
-For now Everything should work
-iron,copper,tin (Abit slow running there) --checking for fix
-coal,mith,adamantite, rune and orikalchite --works fine
-luminite -  abit funky with the door. trying to fix
 
 TO USE 
 Empty inventory with Orebox or none at all~ pick whatever ore you want thats available
