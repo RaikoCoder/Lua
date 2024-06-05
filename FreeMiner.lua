@@ -1,7 +1,11 @@
 --[[
-V0.01 Edited some bugs
-v0.05 added Orikalchite, Changes how the orebox work. 
+
+v0.20 Fixed Luminite as it wasnt mining at all just go to spot ~ 
 v0.10 Edited the Script , cleaned it up abit . fix how everything runs 
+v0.05 added Orikalchite, Changes how the orebox work. 
+V0.01 Edited some bugs
+
+
 For now Everything should work
 iron,copper,tin (Abit slow running there) --checking for fix
 coal,mith,adamantite, rune and orikalchite --works fine
@@ -548,7 +552,12 @@ local function MiningAtMiningGuild()
             if not API.InvFull_() then
                 backtolumi()
                 if API.PInArea(3046,3,9757,3,0) then
-                    MineOre()
+                    API.DoAction_Object_r(0x3a, 0, {RetrieveRandomOreId()}, 50, FFPOINT.new(0, 0, 0), 50)
+                    API.RandomSleep2(600,300,300)
+                    if API.PInArea(3038,4,9763,4,0) then
+                        MineOre() 
+                    end
+                   
                 end
             end
         end
@@ -588,7 +597,8 @@ MiningCoalsBarb()
 MiningMithVarrock()
 MiningAddyRimmy()
 MiningAtMiningGuild()
---print(oreBox)
+print(oreBox)
+
 idleCheck()
 ::continue::
 
