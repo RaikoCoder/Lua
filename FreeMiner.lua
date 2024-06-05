@@ -592,7 +592,6 @@ MiningCoalsBarb()
 MiningMithVarrock()
 MiningAddyRimmy()
 MiningAtMiningGuild()
-print(oreBox)
 
 idleCheck()
 ::continue::
