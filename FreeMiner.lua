@@ -2,7 +2,7 @@
 TO USE 
 Empty inventory with Orebox or none at all~ pick whatever ore you want thats available
 
-
+v0.20 Fixed to the latest ME 
 v0.15 Fixed Luminite 
 v0.10 Edited the Script , cleaned it up abit . fix how everything runs 
 v0.05 added Orikalchite, Changes how the orebox work. 
