@@ -2,7 +2,7 @@
 TO USE 
 Empty inventory with Orebox or none at all~ pick whatever ore you want thats available
 
-
+v0.16 Added Another Fix for Luminite
 v0.15 Fixed Luminite 
 v0.10 Edited the Script , cleaned it up abit . fix how everything runs 
 v0.05 added Orikalchite, Changes how the orebox work. 
@@ -455,7 +455,7 @@ local function gotoLuminite()
             API.RandomSleep2(1200,300,400)
         elseif API.PInArea(3021,1,9739,1,0) then
             goToTile(3046,9756,0)
-        elseif API.PInArea(3046,2,9756,2,0)  and not API.InvFull_() then
+        elseif API.PInArea21(3044,3048,9752,9756)  and not API.InvFull_() then
             API.DoAction_Object1(0x31,API.OFF_ACT_GeneralObject_route0,{ 2112 },50) --Door
             API.RandomSleep2(800,500,400)
             print("Luminite Area")
@@ -478,7 +478,7 @@ local function backtolumi()
         API.RandomSleep2(1200,300,400)
     elseif API.PInArea(3021,1,9739,1,0) then
         goToTile(3046,9756,0)
-    elseif API.PInArea(3046,1,9756,1,0) then
+    elseif API.PInArea21(3044,3048,9752,9756) then
         API.DoAction_Object1(0x31,API.OFF_ACT_GeneralObject_route0,{ 2112 },50) --Door
     elseif API.PInArea(3046,3,9757,3,0) then
         print("Luminite Area")
