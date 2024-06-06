@@ -2,7 +2,7 @@
 TO USE 
 Empty inventory with Orebox or none at all~ pick whatever ore you want thats available
 
-v0.16 Added Another Fix for Luminite
+
 v0.15 Fixed Luminite 
 v0.10 Edited the Script , cleaned it up abit . fix how everything runs 
 v0.05 added Orikalchite, Changes how the orebox work. 
@@ -143,12 +143,12 @@ local function MineOre()
         end
     else
         math.randomseed(os.time())
-        if API.LocalPlayer_HoverProgress() < 85 + math.random(-30,60) then
+        if API.LocalPlayer_HoverProgress() < 95 + math.random(-30,60) then
         -- Try to find and mine a sparkling rock
-        local foundSparkling = API.FindHl(0x3a, 0, ores[selectedOre], 50, { 7165, 7164 })
+        local foundSparkling = API.DOFindHl(0x3a, 0, ores[selectedOre], 50, { 7165, 7164 })
         if foundSparkling then
             print("Sparkle vein found, clicking..")
-            API.FindHl(0x3a, 0, ores[selectedOre], 50, { 7165, 7164 })
+            API.DOFindHl(0x3a, 0, ores[selectedOre], 50, { 7165, 7164 })
             API.RandomSleep2(1200,300,600)  
         else
             -- If no sparkling rock was found, mine the first ore in the shuffled list
