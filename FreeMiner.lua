@@ -427,8 +427,8 @@ local function backtorune()
       end
    end
 local function BankingForRune()
-    if isRuneMine == true and  isDeposit == false or isOrikalchite == true then
-        if API.PInArea(3033,6,9736,6,0) then
+    if ((isRuneMine == true) or (isOrikalchite == true ) )and  isDeposit == false  then
+        if API.PInArea(3033,6,9736,6,0) or API.PInArea21(3039,3049,9732,9739) then
             API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 6226 },50) --Ladder  going up
             API.RandomSleep2(1200,300,400)
             end
