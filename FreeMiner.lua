@@ -2,7 +2,7 @@
 TO USE 
 Empty inventory with Orebox or none at all~ pick whatever ore you want thats available
 
------NECRITE IS STILL UNDER TESTING-----
+-----NECRITE IS STILL UNDER Testing it currently works but dont click sparkles -- :( 
 v1.5 Fixed bugs its overlapping each others if's and running the wrong ore
 v1.0 Added Banite, Necrite , Phasmatite,Drakolith 
 v0.15 Fixed Luminite 
@@ -839,8 +839,14 @@ local function MiningNecrite()
             if not API.InvFull_() and PlayerHP() >= 40 then
                 MineOre()
             elseif PlayerHP() <= 40 then
-                goToTile(3460,3137,0)
-                GetHP()
+                
+                if not API.PInArea(3465,2,3138,2,0) then
+                    goToTile(3465,3138,0)
+                    if API.PInArea(3465,3,3138,3,0) then
+                        GetHP()
+                    end
+                  
+                end
                 if API.PInArea(3227,3,3255,3,0) and isDeposit== true then
                     gotoNecrite()
                     isDeposit = false 
