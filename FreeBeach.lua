@@ -25,6 +25,16 @@ local Sand_npc = {
     Ozan = 21166,
     Sally = 21165,
 }
+local Anim = {
+    Bodybulding = 26551,
+    Crul = 26552,
+    Lunge = 26553,
+    Fly = 26554,
+    Raise = 26549,
+}
+local function StrengthTraining()
+    return API.VB_FindPSettinOrder(779, 1).state == 2473
+  end
 
 local sand_castle = {
     Duke = {97424,97425,97426,97427},
@@ -34,7 +44,7 @@ local sand_castle = {
 }
 GUI.AddBackground("Background", 1, 1, ImColor.new(15, 13, 18, 255))
 GUI.AddLabel("Title", "Beach Event AIO", ImColor.new(255, 255, 255))
-GUI.AddComboBox("Events","Events",{"","Dungeoneering","Cooking","Fishing","Farming","Construction","Hunter"})
+GUI.AddComboBox("Events","Events",{"","Dungeoneering","Strength","Cooking","Fishing","Farming","Construction","Hunter"})
 local function idleCheck()
     local timeDiff = os.difftime(os.time(), afk)
     local randomTime = math.random((MAX_IDLE_TIME_MINUTES * 60) * 0.6, (MAX_IDLE_TIME_MINUTES * 60) * 0.9)
@@ -55,15 +65,17 @@ local function getBeachTemperature()
     end
 end
 --HIGGINS CODES----
+local step = 0
 local function RenewbeachTemp()
-    local step = 0
+  
     if getBeachTemperature() == 294 then
         API.DoAction_Inventory1(35049,0,1,API.OFF_ACT_GeneralInterface_route) -- Eat Ice cream (35049)
         API.RandomSleep2(200, 100, 200)
         step = step + 1
-        if step == 3 then
-            API.Write_LoopyLoop(false)
-        end
+        
+    end
+    if step >= 3 then
+        API.Write_LoopyLoop(false)
     end
 end
 
@@ -88,6 +100,37 @@ end
 
 local function DoEvents()
     local EventTypes = GUI.GetComponentValue("Events")
+    if EventTypes == "Strength" then
+        if not API.ReadPlayerMovin2() and StrengthTraining() then
+            if API.FindNPCbyName("Ivan", 50).Anim == Anim.Crul then
+                if not (API.ReadPlayerAnim() == Anim.Crul) then
+                        print("Found anim: Crul")
+                        API.KeyboardPress2(0x31, 60, 100)
+                end
+            elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Lunge then
+                if not (API.ReadPlayerAnim() == Anim.Lunge) then
+                        print("Found anim: Lunge")
+                        API.KeyboardPress2(0x32, 60, 100)
+                end
+            elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Fly then
+                if (API.ReadPlayerAnim() == Anim.Fly) then
+                        print("Found anim: Fly")
+                        API.KeyboardPress2(0x33, 60, 100)
+                end
+            elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Raise then
+                if not (API.ReadPlayerAnim() == Anim.Raise) then
+                        print("Found anim: Raise")
+                        API.KeyboardPress2(0x34, 60, 100)
+                end
+            end
+        else
+            API.RandomSleep2(1200, 1000, 1500)
+            print("Not on the platform!")
+            if API.DoAction_Object1(0x29, API.OFF_ACT_GeneralObject_route0, { 97379 }, 50) then
+                API.RandomSleep2(1500, 1000, 2000)
+            end
+        end
+    end
     if EventTypes == "Dungeoneering" then
         if API.InvItemFound1(51729) then
             API.DoAction_Inventory1(51729,0,1,API.OFF_ACT_GeneralInterface_route)
