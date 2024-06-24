@@ -102,21 +102,25 @@ local function DoEvents()
     local EventTypes = GUI.GetComponentValue("Events")
     if EventTypes == "Strength" then
         if not API.ReadPlayerMovin2() and StrengthTraining() then
-            if API.FindNPCbyName("Ivan", 50).Anim == Anim.Crul then
-                if not (API.ReadPlayerAnim() == Anim.Crul) then
-                        API.KeyboardPress2(0x31, 60, 100)
+           if API.FindNPCbyName("Ivan", 50).Anim == Anim.Curl then
+                if not (API.ReadPlayerAnim() == Anim.Curl) then
+                    API.DoAction_Interface(0x24,0xffffffff,1,796,1,-1,API.OFF_ACT_GeneralInterface_route)
+                        --API.KeyboardPress2(0x30, 60, 100)
                 end
             elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Lunge then
                 if not (API.ReadPlayerAnim() == Anim.Lunge) then
-                        API.KeyboardPress2(0x32, 60, 100)
+                    API.DoAction_Interface(0x24,0xffffffff,1,796,16,-1,API.OFF_ACT_GeneralInterface_route)
+                        --API.KeyboardPress2(0x32, 60, 100)
                 end
             elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Fly then
                 if (API.ReadPlayerAnim() == Anim.Fly) then
-                        API.KeyboardPress2(0x33, 60, 100)
+                    API.DoAction_Interface(0x24,0xffffffff,1,796,26,-1,API.OFF_ACT_GeneralInterface_route)
+                      --  API.KeyboardPress2(0x33, 60, 100)
                 end
             elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Raise then
                 if not (API.ReadPlayerAnim() == Anim.Raise) then
-                        API.KeyboardPress2(0x34, 60, 100)
+                    API.DoAction_Interface(0x24,0xffffffff,1,796,36,-1,API.OFF_ACT_GeneralInterface_route)
+                        --API.KeyboardPress2(0x34, 60, 100)
                 end
             end
         else
