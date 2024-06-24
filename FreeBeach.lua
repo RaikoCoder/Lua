@@ -271,7 +271,7 @@ do
     idleCheck()
 API.DoRandomEvents()
     if API.CheckAnim(20) or API.ReadPlayerMovin2() then
-        API.RandomSleep2(1200,100,100)
+        API.RandomSleep2(600,100,100)
         goto Hello
     end
     if findNPC(21156,30) then
@@ -284,5 +284,5 @@ API.DoRandomEvents()
     end
 
     ::Hello::
-    API.RandomSleep2(1800,200,300)
+    API.RandomSleep2(600,200,300)
 end
