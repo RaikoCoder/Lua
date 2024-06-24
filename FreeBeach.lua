@@ -97,6 +97,7 @@ local function findNPC(npcid, distance)
 end
 
 local function DoEvents()
+    ---UNDER CONSTRUCTION -- 
     local EventTypes = GUI.GetComponentValue("Events")
     if EventTypes == "Strength" then
         skillxps = API.GetSkillXP("STRENGTH")
@@ -111,15 +112,14 @@ local function DoEvents()
             API.RandomSleep2(1800,200,200)
         end     
        if StrengthTraining() == 2473 then
-        if API.ReadPlayerAnim() == 26551 then
-            API.RandomSleep(600,300,200)
+        if API.ReadPlayerAnim() <= 1 then
+            API.RandomSleep2(1200,300,200)
+            goto continue
         end
             if API.FindNPCbyName("Greta",50).Anim == 26552 then
                 if not curl then
-                    
-                    API.DoAction_Interface(0x24,0xffffffff,1,796,6,-1,API.OFF_ACT_GeneralInterface_route)
                     API.RandomSleep2(1800,100,100)
-                   
+                    API.DoAction_Interface(0x24,0xffffffff,1,796,6,-1,API.OFF_ACT_GeneralInterface_route)
                 end
             end
             if API.FindNPCbyName("Greta",50).Anim == 26553 then
@@ -146,8 +146,11 @@ local function DoEvents()
                    
                 end
             end
+            ::continue::
+            API.RandomSleep2(3600,200,200)
         end
 end
+----FIXING ^^^ ---- 
        
     if EventTypes == "Dungeoneering" then
         if API.InvItemFound1(51729) then
@@ -300,7 +303,6 @@ API.DoRandomEvents()
         RenewbeachTemp()
         DoEvents()
     end
-    print(StrengthTraining())
     ::Hello::
     API.RandomSleep2(600,200,300)
 end
