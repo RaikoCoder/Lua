@@ -104,22 +104,18 @@ local function DoEvents()
         if not API.ReadPlayerMovin2() and StrengthTraining() then
             if API.FindNPCbyName("Ivan", 50).Anim == Anim.Crul then
                 if not (API.ReadPlayerAnim() == Anim.Crul) then
-                        print("Found anim: Crul")
                         API.KeyboardPress2(0x31, 60, 100)
                 end
             elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Lunge then
                 if not (API.ReadPlayerAnim() == Anim.Lunge) then
-                        print("Found anim: Lunge")
                         API.KeyboardPress2(0x32, 60, 100)
                 end
             elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Fly then
                 if (API.ReadPlayerAnim() == Anim.Fly) then
-                        print("Found anim: Fly")
                         API.KeyboardPress2(0x33, 60, 100)
                 end
             elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Raise then
                 if not (API.ReadPlayerAnim() == Anim.Raise) then
-                        print("Found anim: Raise")
                         API.KeyboardPress2(0x34, 60, 100)
                 end
             end
