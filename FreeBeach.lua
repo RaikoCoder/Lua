@@ -25,15 +25,10 @@ local Sand_npc = {
     Ozan = 21166,
     Sally = 21165,
 }
-local Anim = {
-    Bodybulding = 26551,
-    Crul = 26552,
-    Lunge = 26553,
-    Fly = 26554,
-    Raise = 26549,
-}
+
+
 local function StrengthTraining()
-    return API.VB_FindPSettinOrder(779, 1).state == 2473
+    return API.VB_FindPSettinOrder(779, 1).state
   end
 
 local sand_castle = {
@@ -72,11 +67,11 @@ local function RenewbeachTemp()
         API.DoAction_Inventory1(35049,0,1,API.OFF_ACT_GeneralInterface_route) -- Eat Ice cream (35049)
         API.RandomSleep2(200, 100, 200)
         step = step + 1
-        
+        if step >= 3 then
+            API.Write_LoopyLoop(false)
+        end
     end
-    if step >= 3 then
-        API.Write_LoopyLoop(false)
-    end
+    
 end
 
 
@@ -91,7 +86,10 @@ local function findObj(objectId, distance)
     return false
 end
 
-
+local curl = API.ReadPlayerAnim() == 26552
+local lunge = API.ReadPlayerAnim() == 26553
+local fly = API.ReadPlayerAnim() == 26554
+local raise = API.ReadPlayerAnim() == 26549
 
 local function findNPC(npcid, distance)
     local distance = distance or 10
@@ -101,36 +99,56 @@ end
 local function DoEvents()
     local EventTypes = GUI.GetComponentValue("Events")
     if EventTypes == "Strength" then
-        if not API.ReadPlayerMovin2() and StrengthTraining() then
-           if API.FindNPCbyName("Ivan", 50).Anim == Anim.Curl then
-                if not (API.ReadPlayerAnim() == Anim.Curl) then
-                    API.DoAction_Interface(0x24,0xffffffff,1,796,1,-1,API.OFF_ACT_GeneralInterface_route)
-                        --API.KeyboardPress2(0x30, 60, 100)
-                end
-            elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Lunge then
-                if not (API.ReadPlayerAnim() == Anim.Lunge) then
-                    API.DoAction_Interface(0x24,0xffffffff,1,796,16,-1,API.OFF_ACT_GeneralInterface_route)
-                        --API.KeyboardPress2(0x32, 60, 100)
-                end
-            elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Fly then
-                if (API.ReadPlayerAnim() == Anim.Fly) then
-                    API.DoAction_Interface(0x24,0xffffffff,1,796,26,-1,API.OFF_ACT_GeneralInterface_route)
-                      --  API.KeyboardPress2(0x33, 60, 100)
-                end
-            elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Raise then
-                if not (API.ReadPlayerAnim() == Anim.Raise) then
-                    API.DoAction_Interface(0x24,0xffffffff,1,796,36,-1,API.OFF_ACT_GeneralInterface_route)
-                        --API.KeyboardPress2(0x34, 60, 100)
+        skillxps = API.GetSkillXP("STRENGTH")
+        if (skillxps ~= skillxpsold) then
+        skillxpsold = skillxps
+        fail_count = 0
+        else
+        fail_count = fail_count +1
+        end 
+        if StrengthTraining() == 2699  then
+            API.DoAction_Object1(0x29, API.OFF_ACT_GeneralObject_route0, { 97379 }, 50)
+            API.RandomSleep2(1800,200,200)
+        end     
+       if StrengthTraining() == 2473 then
+        if API.ReadPlayerAnim() == 26551 then
+            API.RandomSleep(600,300,200)
+        end
+            if API.FindNPCbyName("Greta",50).Anim == 26552 then
+                if not curl then
+                    
+                    API.DoAction_Interface(0x24,0xffffffff,1,796,6,-1,API.OFF_ACT_GeneralInterface_route)
+                    API.RandomSleep2(1800,100,100)
+                   
                 end
             end
-        else
-            API.RandomSleep2(1200, 1000, 1500)
-            print("Not on the platform!")
-            if API.DoAction_Object1(0x29, API.OFF_ACT_GeneralObject_route0, { 97379 }, 50) then
-                API.RandomSleep2(1500, 1000, 2000)
+            if API.FindNPCbyName("Greta",50).Anim == 26553 then
+                if not lunge then
+                   
+                    API.DoAction_Interface(0x24,0xffffffff,1,796,16,-1,API.OFF_ACT_GeneralInterface_route)
+                    API.RandomSleep2(1800,100,100)
+                    
+                end
+            end
+            if API.FindNPCbyName("Greta",50).Anim == 26554 then
+                if not fly then
+                    
+                    API.DoAction_Interface(0x24,0xffffffff,1,796,26,-1,API.OFF_ACT_GeneralInterface_route)
+                    API.RandomSleep2(1800,100,100)
+                  
+                end
+            end
+            if API.FindNPCbyName("Greta",50).Anim == 26549 then
+                if not raise then
+                   
+                    API.DoAction_Interface(0x24,0xffffffff,1,796,36,-1,API.OFF_ACT_GeneralInterface_route)
+                    API.RandomSleep2(1800,100,100)
+                   
+                end
             end
         end
-    end
+end
+       
     if EventTypes == "Dungeoneering" then
         if API.InvItemFound1(51729) then
             API.DoAction_Inventory1(51729,0,1,API.OFF_ACT_GeneralInterface_route)
@@ -270,19 +288,19 @@ while(API.Read_LoopyLoop())
 do
     idleCheck()
 API.DoRandomEvents()
-    if API.CheckAnim(20) or API.ReadPlayerMovin2() then
+    if API.ReadPlayerMovin2() then
         API.RandomSleep2(600,100,100)
         goto Hello
     end
     if findNPC(21156,30) then
-        if not hasTarget() then
+        if not hasTarget() and API.ReadPlayerAnim() <= 2 then
             API.DoAction_NPC(0x2a,API.OFF_ACT_AttackNPC_route,{ 21156 },50)
         end
     else
         RenewbeachTemp()
         DoEvents()
     end
-
+    print(StrengthTraining())
     ::Hello::
     API.RandomSleep2(600,200,300)
 end
