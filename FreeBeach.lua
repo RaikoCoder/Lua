@@ -154,7 +154,7 @@ end
         fail_count = fail_count +1
         end 
      if not API.PInArea21(3141,3166,3231,3258) then
-            API.DoAction_WalkerW(WPOINT.new( 3151 + math.random(-2, 2), 3249 + math.random(-2, 2), 0))
+            API.DoAction_WalkerW(WPOINT.new( 3153 + math.random(-2, 2), 3241 + math.random(-2, 2), 0))
         end
         if API.PInArea21(3141,3166,3231,3258) then
        
