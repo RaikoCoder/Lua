@@ -94,7 +94,7 @@ local function DoEvents()
         end
         --Dungeoneering
         GUI.UpdateLabelText("Title","Going in the Hole!")
-        if not API.PInArea(3169,3, 3247,3, 0) then
+        if not API.PInArea21(3165,3173, 3241,3250) then
             API.DoAction_WalkerW(WPOINT.new(3169 + math.random(-2, 2), 3247 + math.random(-2, 2), 0))
         else
             ---Start Dungeoneering--
@@ -160,19 +160,19 @@ end
        
            
             if findNPC(Sand_npc.Duke,25) then
-                if  fail_count >= 3 then
+                if  fail_count >= 2 then
                     API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{97424,97425,97426,97427},50,true)
                 end
             elseif findNPC(Sand_npc.Ozan,25) then
-                if fail_count >= 3 then
+                if fail_count >= 2 then
                 API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{ 109550,109551,109552},50,true)
                 end
             elseif findNPC(Sand_npc.Sally,25) then
-                if  fail_count >= 3 then
+                if  fail_count >= 2 then
                 API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{97420,97421,97422,97423},50,true)
                 end
             elseif findNPC(Sand_npc.Sedridor,25) then
-                if fail_count >= 3 then
+                if fail_count >= 2 then
                 API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{97416,97417,97418,97419},50,true)
                 end
             end
