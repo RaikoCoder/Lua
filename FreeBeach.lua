@@ -235,7 +235,7 @@ API.DoRandomEvents()
         goto Hello
     end
     if findNPC(21156,30) then
-        if not isFightingClawdia() then
+        if isFightingClawdia() then
             API.DoAction_NPC(0x2a,API.OFF_ACT_AttackNPC_route,{ 21156 },50)
         end
     else
