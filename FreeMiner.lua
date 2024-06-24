@@ -863,6 +863,7 @@ local function MiningNecrite()
 --end of Necrite
 API.SetDrawTrackedSkills(true)
 while (API.Read_LoopyLoop()) do
+    API.DoRandomEvents()
     isLoggedout()
  if API.ReadPlayerMovin2() then
     API.RandomSleep2(500,500,400)
