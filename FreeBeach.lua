@@ -213,15 +213,12 @@ end
   
     end
 end
-local function isFightingClawdia() 
-    local id = API.Local_PlayerInterActingWith_Id()
-    if id == 21156 then 
-        return true
-    end
 
-    return false
+
+local function hasTarget()
+    local interacting = API.ReadLpInteracting()
+    if interacting.Id ~= 0 then return true else return false end
 end
-
 
 API.SetDrawTrackedSkills(true)
 GUI.Draw()
@@ -235,7 +232,7 @@ API.DoRandomEvents()
         goto Hello
     end
     if findNPC(21156,30) then
-        if isFightingClawdia() then
+        if not hasTarget() then
             API.DoAction_NPC(0x2a,API.OFF_ACT_AttackNPC_route,{ 21156 },50)
         end
     else
