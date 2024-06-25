@@ -171,17 +171,23 @@ local function isHappyHour()
 end
 local ncount = 0 
 local function RenewbeachTemp()
- if getBeachTemperature() == 294 then
+ if getBeachTemperature() == 294 and ncount == 0 then
     if API.InvItemFound1(35049) then
         API.DoAction_Inventory1(35049, 0, 1, API.OFF_ACT_GeneralInterface_route)
         API.RandomSleep2(1200, 200, 200)
         ncount = ncount + 1
-    if ncount == 1 and getBeachTemperature() == getBeachTemperature() then
-        API.RandomSleep2(3600, 200, 200)
-                API.Write_LoopyLoop(false)
-            end
-        end
     end
+    if ncount == 1 and getBeachTemperature() ~= 294 then
+        API.RandomSleep2(1200,200,200)
+        print("Yay Ice Cream")
+        ncount = 0 
+    end
+    if ncount == 1 and getBeachTemperature() == 294 then
+        print("Max Temp Reached")
+                API.Write_LoopyLoop(false)
+    end
+        end
+    
  end
 local function DoEvents()
 
@@ -189,6 +195,9 @@ local function DoEvents()
     if EventTypes == "Strength" then
         GUI.UpdateLabelText("Title","Lets Get BUFFED!")
         Bodybulding()
+        if isHappyHour() == false then
+            RenewbeachTemp()
+        end
     end
        
     if EventTypes == "Dungeoneering" then
@@ -229,6 +238,9 @@ local function DoEvents()
                     API.RandomSleep2(600,200,200)
                 end
             end
+            if isHappyHour() == false or isFisher() == false  then
+                RenewbeachTemp()
+            end
         end
         --Fishing
     if EventTypes == "Farming" then
@@ -263,11 +275,13 @@ local function DoEvents()
                 API.RandomSleep2(1800,100,100)
             end
         end
+        if isHappyHour() == false or isFarm() == false  then
+            RenewbeachTemp()
         end
         --Farming
+            end
+        end
     end
-end
-
 
     if EventTypes == "Construction" then
         if API.InvItemFound1(51733) and (not isHappyHour()) and (not isGeorge()) then
@@ -302,8 +316,10 @@ end
                end
             end
         end
+        if isHappyHour() == false or isGeorge() == false  then
+            RenewbeachTemp()
         end
-        
+    end
         
     end
         --Construction
@@ -333,8 +349,10 @@ end
                     API.RandomSleep2(1200,100,100)
                 end
             end
+            if isHappyHour() == false or isDuck() == false  then
+                RenewbeachTemp()
         end
-
+    end
         --Hunter
     end
     if EventTypes == "Cooking" then
@@ -347,8 +365,14 @@ end
                 API.RandomSleep2(1200,100,100)
             end
         end
+        if isHappyHour() == false then
+            RenewbeachTemp()
+        end
         --Cooking
-  
+    end
+
+    if isHappyHour() then
+       EventTypes = "Dungeoneering"
     end
 end
 
