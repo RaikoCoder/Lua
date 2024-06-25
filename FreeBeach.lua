@@ -119,8 +119,6 @@ local function Bodybulding()
         end
     end
 end
-
-
 local function goToTile(x, y, z) --random coord selection
     if x and y and z then
         math.randomseed(os.time())
@@ -369,15 +367,12 @@ local function DoEvents()
     end
 end
 
-
-
-
 API.SetDrawTrackedSkills(true)
 GUI.Draw()
 API.Write_LoopyLoop(true)
 while(API.Read_LoopyLoop())
 do  
-    idleCheck()
+idleCheck()
 API.DoRandomEvents()
     if API.ReadPlayerMovin2() then
         API.RandomSleep2(600,100,100)
