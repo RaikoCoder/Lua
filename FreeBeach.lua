@@ -305,6 +305,7 @@ API.DoRandomEvents()
     if findNPC(21156,30) then
         if not hasTarget() and API.ReadPlayerAnim() <= 2 then
             API.DoAction_NPC(0x2a,API.OFF_ACT_AttackNPC_route,{ 21156 },50)
+            API.RandomSleep2(1200,100,100)
         end
     else
         DoEvents()
