@@ -27,10 +27,26 @@ local Sand_npc = {
     Ozan = 21166,
     Sally = 21165,
 }
+local Anim = {
+   Bodybulding = 26551,
+    
+    Curl2 = 26552,
+    Lunge = 26553,
+    Fly = 26554,
+    Raise = 26549,
 
+}
 
+local function clawHP()
+    local dia = API.ReadAllObjectsArray({1}, {21156}, {})
+    for _, npc in pairs(dia) do
+        if npc.Id == 21156 then
+            return npc.Life
+        end
+    end
+end
 local function StrengthTraining()
-    return API.VB_FindPSettinOrder(779, 1).state
+    return API.VB_FindPSettinOrder(779, 1).state == 2473
   end
 
 local sand_castle = {
@@ -62,96 +78,92 @@ local function getBeachTemperature()
     end
 end
 --HIGGINS CODES----
-local step = 0
 local function RenewbeachTemp()
-    if step >= 4 then
+    if getBeachTemperature() == 294 then
+    if API.InvItemFound1(35049) then
+        API.DoAction_Inventory1(35049, 0, 1, API.OFF_ACT_GeneralInterface_route)
+        API.RandomSleep2(1200, 0, 200)
+    end
+
+    local brainFreezeInterface = { { 1189, 2, -1, -1, 0 }, { 1189, 3, -1, 2, 0 } }
+    local brainFreeze = API.ScanForInterfaceTest2Get(false, brainFreezeInterface)
+    if #brainFreeze > 0 then
         API.Write_LoopyLoop(false)
     end
-    if getBeachTemperature() == 294 then
-        API.DoAction_Inventory1(35049,0,1,API.OFF_ACT_GeneralInterface_route) -- Eat Ice cream (35049)
-        API.RandomSleep2(200, 100, 200)
-        step = step + 1
-    end
-    
+end
 end
 
-
-local function findObj(objectId, distance)
-    distance = distance or 25
-    local allObj = API.GetAllObjArrayInteract(objectId, distance, {0,12})
-    for _, v in pairs(allObj) do
-        if v.Bool1 == 0 then
-            return v.Id
+local function Bodybulding()
+    if not API.ReadPlayerMovin2() and StrengthTraining() then
+        if API.FindNPCbyName("Ivan", 50).Anim == Anim.Curl2 then
+            if not (API.ReadPlayerAnim() == Anim.Curl2) then
+                    print("Found anim: Curl")
+                    API.DoAction_Interface(0x24,0xffffffff,1,796,6,-1,API.OFF_ACT_GeneralInterface_route)
+            end
+        elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Lunge then
+            if not (API.ReadPlayerAnim() == Anim.Lunge) then
+                    print("Found anim: Lunge")
+                    API.DoAction_Interface(0x24,0xffffffff,1,796,16,-1,API.OFF_ACT_GeneralInterface_route)
+            end
+        elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Fly then
+            if (API.ReadPlayerAnim() == Anim.Fly) then
+                    print("Found anim: Fly")
+                    API.DoAction_Interface(0x24,0xffffffff,1,796,26,-1,API.OFF_ACT_GeneralInterface_route)
+            end
+        elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Raise then
+            if not (API.ReadPlayerAnim() == Anim.Raise) then
+                    print("Found anim: Raise")
+                    API.DoAction_Interface(0x24,0xffffffff,1,796,36,-1,API.OFF_ACT_GeneralInterface_route)
+            end
+        end
+    else
+        API.RandomSleep2(1200, 1000, 1500)
+        print("Not on the platform!")
+        if API.DoAction_Object1(0x29, API.OFF_ACT_GeneralObject_route0, { 97379 }, 50) then
+            API.RandomSleep2(1500, 1000, 2000)
         end
     end
-    return false
 end
 
-local curl = API.ReadPlayerAnim() == 26552
-local lunge = API.ReadPlayerAnim() == 26553
-local fly = API.ReadPlayerAnim() == 26554
-local raise = API.ReadPlayerAnim() == 26549
 
+local function goToTile(x, y, z) --random coord selection
+    if x and y and z then
+        math.randomseed(os.time())
+        local offsetRange = 2
+
+        -- Generate random offsets for x and y
+        local offsetX = math.random(-offsetRange, offsetRange)
+        local offsetY = math.random(-offsetRange, offsetRange)
+
+        -- Apply the offsets to the original coordinates
+        local newX = x + offsetX
+        local newY = y + offsetY
+
+        -- Assuming API.DoAction_Tile() takes coordinates as arguments
+        API.DoAction_Tile(WPOINT.new(newX, newY, z))
+    end
+end
 local function findNPC(npcid, distance)
     local distance = distance or 10
     return #API.GetAllObjArrayInteract({npcid}, distance, {1}) > 0
 end
+local function AttackClawdia()
+
+    if #API.ReadAllObjectsArray({ 1 }, { 21156 }, {}) == 0 then return end
+    if API.ReadLpInteracting().Id ~= 21156 then
+        if API.DoAction_NPC(0x2a, API.OFF_ACT_AttackNPC_route, { 21156 }, 50) then
+            API.RandomSleep2(1200, 0, 200)
+            API.WaitUntilMovingEnds(10,20)
+        end
+    end
+end
 
 local function DoEvents()
-    ---UNDER CONSTRUCTION -- 
+
     local EventTypes = GUI.GetComponentValue("Events")
     if EventTypes == "Strength" then
-        skillxps = API.GetSkillXP("STRENGTH")
-        if (skillxps ~= skillxpsold) then
-        skillxpsold = skillxps
-        fail_count = 0
-        else
-        fail_count = fail_count +1
-        end 
-        if StrengthTraining() == 2699  then
-            API.DoAction_Object1(0x29, API.OFF_ACT_GeneralObject_route0, { 97379 }, 50)
-            API.RandomSleep2(1800,200,200)
-        end     
-       if StrengthTraining() == 2473 then
-        if API.ReadPlayerAnim() <= 1 then
-            API.RandomSleep2(1200,300,200)
-            goto continue
-        end
-            if API.FindNPCbyName("Greta",50).Anim == 26552 then
-                if not curl then
-                    API.RandomSleep2(1800,100,100)
-                    API.DoAction_Interface(0x24,0xffffffff,1,796,6,-1,API.OFF_ACT_GeneralInterface_route)
-                end
-            end
-            if API.FindNPCbyName("Greta",50).Anim == 26553 then
-                if not lunge then
-                   
-                    API.DoAction_Interface(0x24,0xffffffff,1,796,16,-1,API.OFF_ACT_GeneralInterface_route)
-                    API.RandomSleep2(1800,100,100)
-                    
-                end
-            end
-            if API.FindNPCbyName("Greta",50).Anim == 26554 then
-                if not fly then
-                    
-                    API.DoAction_Interface(0x24,0xffffffff,1,796,26,-1,API.OFF_ACT_GeneralInterface_route)
-                    API.RandomSleep2(1800,100,100)
-                  
-                end
-            end
-            if API.FindNPCbyName("Greta",50).Anim == 26549 then
-                if not raise then
-                   
-                    API.DoAction_Interface(0x24,0xffffffff,1,796,36,-1,API.OFF_ACT_GeneralInterface_route)
-                    API.RandomSleep2(1800,100,100)
-                   
-                end
-            end
-            ::continue::
-            API.RandomSleep2(3600,200,200)
-        end
-end
-----FIXING ^^^ ---- 
+        Bodybulding()
+    end
        
     if EventTypes == "Dungeoneering" then
         if API.InvItemFound1(51729) and not isHoleActive() then
@@ -160,7 +172,8 @@ end
         --Dungeoneering
         GUI.UpdateLabelText("Title","Going in the Hole!")
         if not API.PInArea21(3165,3173, 3241,3250) then
-            API.DoAction_WalkerW(WPOINT.new(3169 + math.random(-2, 2), 3247 + math.random(-2, 2), 0))
+            goToTile(3169,3247,0)
+            API.RandomSleep2(2600,100,100)
         else
             ---Start Dungeoneering--
             if API.ReadPlayerAnim() <= 2  then
@@ -169,8 +182,6 @@ end
             end
            
         end
-        
-       
     end
     if EventTypes == "Fishing" then
         if API.InvItemFound1(51732) then
@@ -191,15 +202,29 @@ end
         if API.InvItemFound1(51731) then
             API.DoAction_Inventory1(51731,0,1,API.OFF_ACT_GeneralInterface_route)
         end
-        GUI.UpdateLabelText("Title","Going Farming")
-        if not API.PInArea(3179,3,3213,3,0) then
-            API.DoAction_WalkerW(WPOINT.new( 3179 + math.random(-2, 2), 3213 + math.random(-2, 2), 0))
+        skillxps = API.GetSkillXP("FARMING")
+        if (skillxps ~= skillxpsold) then
+        skillxpsold = skillxps
+        fail_count = 0
         else
-            if API.ReadPlayerAnim() <= 2  then
+            API.RandomSleep2(800,200,200)
+            fail_count = fail_count +1
+        end 
+        GUI.UpdateLabelText("Title","Going to Get Some Coconuts! ")
+        if not API.PInArea21(3170,3186,3209,3218) then
+            goToTile(3180,3213,0)
+            API.RandomSleep2(2600,100,200)
+        else
+            if API.ReadPlayerAnim() <= 2 and API.PInArea21(3170,3186,3209,3218) then
+                if fail_count>= 3 then
             API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{117506,117500,117510},50,true)
+            fail_count = 0
             API.RandomSleep2(1800,100,100)
+                end
             if API.InvFull_() then
                 API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route0,{ 97332 },50)
+                fail_count = 0
+                API.RandomSleep2(1800,100,100)
             end
         end
         --Farming
@@ -217,56 +242,54 @@ end
         skillxpsold = skillxps
         fail_count = 0
         else
-        fail_count = fail_count +1
+            API.RandomSleep2(800,200,200)
+            fail_count = fail_count +1
         end 
      if not API.PInArea21(3141,3166,3231,3258) then
-            API.DoAction_WalkerW(WPOINT.new( 3153 + math.random(-2, 2), 3241 + math.random(-2, 2), 0))
+        goToTile(3153,3241,0)
+        API.RandomSleep2(2600,100,200)
         end
-        if API.PInArea21(3141,3166,3231,3258) then
-       
-           
+    if API.PInArea21(3141,3166,3231,3258) then
+        if  not API.ReadPlayerMovin2() and (not API.CheckAnim(50)) then
             if findNPC(Sand_npc.Duke,25) then
-                if  fail_count >= 6 then
-                    API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{97424,97425,97426,97427},50,true)
-                    API.RandomSleep2(1800,100,100)
-                end
+                API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{97424,97425,97426,97427},50,true)
             elseif findNPC(Sand_npc.Ozan,25) then
-                if fail_count >= 6 then
                 API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{ 109550,109551,109552},50,true)
-                API.RandomSleep2(1800,100,100)
-                end
             elseif findNPC(Sand_npc.Sally,25) then
-                if  fail_count >= 6 then
                 API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{97420,97421,97422,97423},50,true)
-                API.RandomSleep2(1800,100,100)
-                end
             elseif findNPC(Sand_npc.Sedridor,25) then
-                if fail_count >= 6 then
                 API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{97416,97417,97418,97419},50,true)
-                API.RandomSleep2(1800,100,100)
-                end
+               end
             end
+        end
         
         
     end
-end
-           
         --Construction
     if EventTypes == "Hunter" then
+        skillxps = API.GetSkillXP("HUNTER")
+        if (skillxps ~= skillxpsold) then
+        skillxpsold = skillxps
+        fail_count = 0
+        else
+            API.RandomSleep2(800,200,200)
+        fail_count = fail_count +1
+        end 
         if API.InvItemFound1(51730) then
             API.DoAction_Inventory1(51730,0,1,API.OFF_ACT_GeneralInterface_route)
         end
         GUI.UpdateLabelText("Title","Going to Hunt Ducks!")
-        if not API.PInArea(3170,2,3212,2,0) then
-            API.DoAction_WalkerW(WPOINT.new( 3170 + math.random(-2, 2), 3212 + math.random(-2, 2), 0))
+        if not API.PInArea21(3168,3174,3209,3216) then
+            goToTile(3170,3212,0)
+            API.RandomSleep2(2600,100,200)
         else
-            if API.PInArea(3170,3,3212,3,0) then
-                if API.ReadPlayerAnim() <= 2  then
+                if API.ReadPlayerAnim() <= 2 and fail_count>=6 then
                     API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route0,{ 104332 },50)
+                    fail_count = 0
                     API.RandomSleep2(1200,100,100)
                 end
-            end
         end
+
         --Hunter
     end
     if EventTypes == "Cooking" then
@@ -285,31 +308,27 @@ end
 end
 
 
-local function hasTarget()
-    local interacting = API.ReadLpInteracting()
-    if interacting.Id ~= 0 then return true else return false end
-end
+
 
 API.SetDrawTrackedSkills(true)
 GUI.Draw()
 API.Write_LoopyLoop(true)
 while(API.Read_LoopyLoop())
-do
+do  
     idleCheck()
-    RenewbeachTemp()
 API.DoRandomEvents()
     if API.ReadPlayerMovin2() then
         API.RandomSleep2(600,100,100)
         goto Hello
     end
-    if findNPC(21156,30) then
-        if not hasTarget() and API.ReadPlayerAnim() <= 2 then
-            API.DoAction_NPC(0x2a,API.OFF_ACT_AttackNPC_route,{ 21156 },50)
-            API.RandomSleep2(1200,100,100)
-        end
-    else
+    if findNPC(21156, 25) and clawHP() >= 9000000 then
+        AttackClawdia()
+    else 
+        RenewbeachTemp()
         DoEvents()
     end
     ::Hello::
     API.RandomSleep2(600,200,300)
+
+    
 end
