@@ -8,17 +8,19 @@ local fail_count = 0
 --HIGGINS CODES----
 local Buffs = {
 -- BUFF/STATUS EFFECT IDS
-35051, -- Pink fizz (beach cocktail)
-35052, -- Purple Lumbridge (beach cocktail)
-35053, -- Pineappletini (beach cocktail)
-35054, -- Lemon sour (beach cocktail)
-51729, -- A Hole in One (beach cocktail)
-51730, -- The Ugly Duckling (beach cocktail)
-51731, -- The Palmer Farmer (beach cocktail)
-51732, -- Fisherman's Friend (beach cocktail)
-51733, -- George's Peach Delight  (beach cocktail)
+Pfizz = 35051, -- Pink fizz (beach cocktail)
+Purple =35052, -- Purple Lumbridge (beach cocktail)
+Pineapple = 35053, -- Pineappletini (beach cocktail)
+Lemon= 35054, -- Lemon sour (beach cocktail)
+Hole = 51729, -- A Hole in One (beach cocktail)
+Duck = 51730, -- The Ugly Duckling (beach cocktail)
+Farm = 51731, -- The Palmer Farmer (beach cocktail)
+Fisher = 51732, -- Fisherman's Friend (beach cocktail)
+George = 51733, -- George's Peach Delight  (beach cocktail)
 }
-
+local function isHoleActive()
+    return API.Buffbar_GetIDstatus(Buffs.Hole).found
+end
 local Sand_npc = {
     Sedridor = 21164,
     Duke = 21167,
@@ -62,14 +64,13 @@ end
 --HIGGINS CODES----
 local step = 0
 local function RenewbeachTemp()
-  
+    if step >= 4 then
+        API.Write_LoopyLoop(false)
+    end
     if getBeachTemperature() == 294 then
         API.DoAction_Inventory1(35049,0,1,API.OFF_ACT_GeneralInterface_route) -- Eat Ice cream (35049)
         API.RandomSleep2(200, 100, 200)
         step = step + 1
-        if step >= 3 then
-            API.Write_LoopyLoop(false)
-        end
     end
     
 end
@@ -153,7 +154,7 @@ end
 ----FIXING ^^^ ---- 
        
     if EventTypes == "Dungeoneering" then
-        if API.InvItemFound1(51729) then
+        if API.InvItemFound1(51729) and not isHoleActive() then
             API.DoAction_Inventory1(51729,0,1,API.OFF_ACT_GeneralInterface_route)
         end
         --Dungeoneering
@@ -295,6 +296,7 @@ API.Write_LoopyLoop(true)
 while(API.Read_LoopyLoop())
 do
     idleCheck()
+    RenewbeachTemp()
 API.DoRandomEvents()
     if API.ReadPlayerMovin2() then
         API.RandomSleep2(600,100,100)
@@ -305,7 +307,6 @@ API.DoRandomEvents()
             API.DoAction_NPC(0x2a,API.OFF_ACT_AttackNPC_route,{ 21156 },50)
         end
     else
-        RenewbeachTemp()
         DoEvents()
     end
     ::Hello::
