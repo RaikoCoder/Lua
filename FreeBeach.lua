@@ -164,7 +164,7 @@ end
             ---Start Dungeoneering--
             if API.ReadPlayerAnim() <= 2  then
                 API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route0,{ 114121 },50)
-                API.RandomSleep2(600,200,200)
+                API.RandomSleep2(1800,100,100)
             end
            
         end
@@ -178,7 +178,7 @@ end
         GUI.UpdateLabelText("Title","Going Fishing")
             if API.ReadPlayerAnim() <= 2  then
                 API.DoAction_NPC_str(0x29,API.OFF_ACT_InteractNPC_route,{"Fishing spot"},50)
-                API.RandomSleep2(1200,100,100)
+                API.RandomSleep2(1800,100,100)
                 if API.InvFull_() then
                     API.DoAction_NPC_str(0x29,API.OFF_ACT_InteractNPC_route,{ "Wellington" },50)
                     API.RandomSleep2(600,200,200)
@@ -196,6 +196,7 @@ end
         else
             if API.ReadPlayerAnim() <= 2  then
             API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{117506,117500,117510},50,true)
+            API.RandomSleep2(1800,100,100)
             if API.InvFull_() then
                 API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route0,{ 97332 },50)
             end
@@ -224,20 +225,24 @@ end
        
            
             if findNPC(Sand_npc.Duke,25) then
-                if  fail_count >= 2 then
+                if  fail_count >= 6 then
                     API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{97424,97425,97426,97427},50,true)
+                    API.RandomSleep2(1800,100,100)
                 end
             elseif findNPC(Sand_npc.Ozan,25) then
-                if fail_count >= 2 then
+                if fail_count >= 6 then
                 API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{ 109550,109551,109552},50,true)
+                API.RandomSleep2(1800,100,100)
                 end
             elseif findNPC(Sand_npc.Sally,25) then
-                if  fail_count >= 2 then
+                if  fail_count >= 6 then
                 API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{97420,97421,97422,97423},50,true)
+                API.RandomSleep2(1800,100,100)
                 end
             elseif findNPC(Sand_npc.Sedridor,25) then
-                if fail_count >= 2 then
+                if fail_count >= 6 then
                 API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{97416,97417,97418,97419},50,true)
+                API.RandomSleep2(1800,100,100)
                 end
             end
         
