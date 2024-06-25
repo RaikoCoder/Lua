@@ -19,8 +19,21 @@ Fisher = 51732, -- Fisherman's Friend (beach cocktail)
 George = 51733, -- George's Peach Delight  (beach cocktail)
 }
 local function isHoleActive()
-    return API.Buffbar_GetIDstatus(Buffs.Hole).found
+    return API.Buffbar_GetIDstatus(Buffs.Hole,false).found
 end
+local function isDuck()
+    return API.Buffbar_GetIDstatus(Buffs.Duck,false).found
+end
+local function isFarm()
+    return API.Buffbar_GetIDstatus(Buffs.Farm,false).found
+end
+local function isFisher()
+    return API.Buffbar_GetIDstatus(Buffs.Fisher,false).found
+end
+local function isGeorge()
+    return API.Buffbar_GetIDstatus(Buffs.George,false).found
+end
+
 local Sand_npc = {
     Sedridor = 21164,
     Duke = 21167,
@@ -37,11 +50,11 @@ local Anim = {
 
 }
 
-local function clawHP()
+local function isclawHP()
     local dia = API.ReadAllObjectsArray({1}, {21156}, {})
     for _, npc in pairs(dia) do
         if npc.Id == 21156 then
-            return npc.Life
+             clawHp = npc.Life
         end
     end
 end
@@ -157,6 +170,20 @@ local function AttackClawdia()
         end
     end
 end
+local function getSpotlight()
+    local i = API.ScanForInterfaceTest2Get(false, { { 1642,0,-1,-1,0 }, { 1642,3,-1,0,0 }, { 1642,5,-1,3,0 } })
+    if #i > 0 then
+        return string.match(i[1].textids,"<br>(.*)")
+    end
+end
+
+local function isHappyHour()
+    local spot = getSpotlight()
+    if spot == nil or spot == '' then return false end
+    return string.find(spot, 'Happy Hour')
+end
+
+
 
 local function DoEvents()
 
@@ -166,8 +193,10 @@ local function DoEvents()
     end
        
     if EventTypes == "Dungeoneering" then
-        if API.InvItemFound1(51729) and not isHoleActive() then
+        if API.InvItemFound1(51729) and (not isHoleActive()) and (not isHappyHour()) then
             API.DoAction_Inventory1(51729,0,1,API.OFF_ACT_GeneralInterface_route)
+        else
+            RenewbeachTemp()
         end
         --Dungeoneering
         GUI.UpdateLabelText("Title","Going in the Hole!")
@@ -184,8 +213,10 @@ local function DoEvents()
         end
     end
     if EventTypes == "Fishing" then
-        if API.InvItemFound1(51732) then
+        if API.InvItemFound1(51732) and (not isHappyHour()) and (not isFisher()) then
             API.DoAction_Inventory1(51732,0,1,API.OFF_ACT_GeneralInterface_route)
+        else 
+            RenewbeachTemp()
         end
         GUI.UpdateLabelText("Title","Going Fishing")
             if API.ReadPlayerAnim() <= 2  then
@@ -199,8 +230,10 @@ local function DoEvents()
         end
         --Fishing
     if EventTypes == "Farming" then
-        if API.InvItemFound1(51731) then
+        if API.InvItemFound1(51731) and (not isHappyHour()) and (not isFarm()) then
             API.DoAction_Inventory1(51731,0,1,API.OFF_ACT_GeneralInterface_route)
+        else
+            RenewbeachTemp()
         end
         skillxps = API.GetSkillXP("FARMING")
         if (skillxps ~= skillxpsold) then
@@ -233,8 +266,10 @@ end
 
 
     if EventTypes == "Construction" then
-        if API.InvItemFound1(51733) then
+        if API.InvItemFound1(51733) and (not isHappyHour()) and (not isGeorge()) then
             API.DoAction_Inventory1(51733,0,1,API.OFF_ACT_GeneralInterface_route)
+        else
+            RenewbeachTemp()
         end
         GUI.UpdateLabelText("Title","Going to Build Sand Castles")
         skillxps = API.GetSkillXP("CONSTRUCTION")
@@ -275,8 +310,10 @@ end
             API.RandomSleep2(800,200,200)
         fail_count = fail_count +1
         end 
-        if API.InvItemFound1(51730) then
+        if API.InvItemFound1(51730) and (not isHappyHour()) and (not isDuck())then
             API.DoAction_Inventory1(51730,0,1,API.OFF_ACT_GeneralInterface_route)
+        else
+            RenewbeachTemp()
         end
         GUI.UpdateLabelText("Title","Going to Hunt Ducks!")
         if not API.PInArea21(3168,3174,3209,3216) then
@@ -293,6 +330,9 @@ end
         --Hunter
     end
     if EventTypes == "Cooking" then
+        if not isHappyHour() then
+            RenewbeachTemp()
+        end
         GUI.UpdateLabelText("Title","Going to Cook Fishes!")
         if not API.PInArea21(3173,3181,3249,3254) then
             API.DoAction_WalkerW(WPOINT.new( 3175+ math.random(-2, 2), 3251 + math.random(-2, 2), 0))
@@ -321,11 +361,12 @@ API.DoRandomEvents()
         API.RandomSleep2(600,100,100)
         goto Hello
     end
-    if findNPC(21156, 25) and clawHP() >= 9000000 then
+    if findNPC(21156, 25)and not API.LocalPlayer_IsInCombat_()  then
         AttackClawdia()
     else 
-        RenewbeachTemp()
-        DoEvents()
+        if not API.LocalPlayer_IsInCombat_() then
+            DoEvents()
+        end
     end
     ::Hello::
     API.RandomSleep2(600,200,300)
