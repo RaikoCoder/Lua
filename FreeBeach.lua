@@ -97,28 +97,23 @@ local function Bodybulding()
     if not API.ReadPlayerMovin2() and StrengthTraining() then
         if API.FindNPCbyName("Ivan", 50).Anim == Anim.Curl2 then
             if not (API.ReadPlayerAnim() == Anim.Curl2) then
-                    print("Found anim: Curl")
-                    API.DoAction_Interface(0x24,0xffffffff,1,796,6,-1,API.OFF_ACT_GeneralInterface_route)
+              API.DoAction_Interface(0x24,0xffffffff,1,796,6,-1,API.OFF_ACT_GeneralInterface_route)
             end
         elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Lunge then
             if not (API.ReadPlayerAnim() == Anim.Lunge) then
-                    print("Found anim: Lunge")
                     API.DoAction_Interface(0x24,0xffffffff,1,796,16,-1,API.OFF_ACT_GeneralInterface_route)
             end
         elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Fly then
             if (API.ReadPlayerAnim() == Anim.Fly) then
-                    print("Found anim: Fly")
                     API.DoAction_Interface(0x24,0xffffffff,1,796,26,-1,API.OFF_ACT_GeneralInterface_route)
             end
         elseif API.FindNPCbyName("Ivan", 50).Anim == Anim.Raise then
             if not (API.ReadPlayerAnim() == Anim.Raise) then
-                    print("Found anim: Raise")
                     API.DoAction_Interface(0x24,0xffffffff,1,796,36,-1,API.OFF_ACT_GeneralInterface_route)
             end
         end
     else
         API.RandomSleep2(1200, 1000, 1500)
-        print("Not on the platform!")
         if API.DoAction_Object1(0x29, API.OFF_ACT_GeneralObject_route0, { 97379 }, 50) then
             API.RandomSleep2(1500, 1000, 2000)
         end
@@ -183,7 +178,6 @@ local function RenewbeachTemp()
         ncount = 0 
     end
     if ncount == 1 and getBeachTemperature() == 294 then
-        print("Max Temp Reached")
                 API.Write_LoopyLoop(false)
     end
         end
@@ -203,7 +197,6 @@ local function DoEvents()
     if EventTypes == "Dungeoneering" then
         if (API.InvItemcount_1(51729) >=1) and (not isHoleActive()) and (not isHappyHour()) then
             if getBeachTemperature() == 294 then
-                print("Going to drink for temp")
                 API.DoAction_Inventory1(51729,0,1,API.OFF_ACT_GeneralInterface_route)
             end
         end
@@ -385,7 +378,6 @@ API.Write_LoopyLoop(true)
 while(API.Read_LoopyLoop())
 do  
     idleCheck()
-    print(getBeachTemperature())
 API.DoRandomEvents()
     if API.ReadPlayerMovin2() then
         API.RandomSleep2(600,100,100)
