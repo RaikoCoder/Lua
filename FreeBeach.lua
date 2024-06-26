@@ -440,11 +440,6 @@ GUI.Draw()
 API.Write_LoopyLoop(true)
 while(API.Read_LoopyLoop())
 do  
-    print(isHoleActive() ," Hole")
-    print(isHappyHour() ," Happy")
-    print(Step)
-    print(ncount)
-    print(isDuck(),"Duck") 
     idleCheck()
 API.DoRandomEvents()
     if API.ReadPlayerMovin2() then
