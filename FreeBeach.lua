@@ -226,6 +226,8 @@ local function DoEvents()
         if (API.InvItemcount_1(51729) >=1) and isHoleActive() ==false  and (not isHappyHour()) then
             if getBeachTemperature() == 294 then
                 API.DoAction_Inventory1(51729,0,1,API.OFF_ACT_GeneralInterface_route)
+                ncount = 1
+                fail = 0
             end
         end
 
@@ -254,6 +256,8 @@ local function DoEvents()
         if API.InvItemFound1(51732) and (not isHappyHour()) and isFisher() == false then
             if getBeachTemperature() == 294 then
             API.DoAction_Inventory1(51732,0,1,API.OFF_ACT_GeneralInterface_route)
+            ncount = 1
+                fail = 0
             end
         end
         if isFishFarmHunt() == false and (API.InvItemcount_1(Buffs.Pineapple) >= 1) then
@@ -277,6 +281,8 @@ local function DoEvents()
         if API.InvItemFound1(51731) and (not isHappyHour()) and isFarm() == false   then
             if getBeachTemperature() == 294 then
             API.DoAction_Inventory1(51731,0,1,API.OFF_ACT_GeneralInterface_route)
+            ncount = 1
+                fail = 0
             end
         end
         if isFishFarmHunt() == false and (API.InvItemcount_1(Buffs.Pineapple) >= 1) then
@@ -320,6 +326,8 @@ local function DoEvents()
         if API.InvItemFound1(51733) and (not isHappyHour()) and isGeorge() == false then
             if getBeachTemperature() == 294 then
             API.DoAction_Inventory1(51733,0,1,API.OFF_ACT_GeneralInterface_route)
+            ncount = 1
+                fail = 0
             end
         end
         if isCookSand() == false and (API.InvItemcount_1(Buffs.Purple) >= 1) then
@@ -371,6 +379,8 @@ local function DoEvents()
         if API.InvItemFound1(51730) and (not isHappyHour()) and isDuck() == false then
             if getBeachTemperature() == 294 then
             API.DoAction_Inventory1(51730,0,1,API.OFF_ACT_GeneralInterface_route)
+            ncount = 1
+                fail = 0
             end
         end
         if isFishFarmHunt() == false and (API.InvItemcount_1(Buffs.Pineapple) >= 1) then
@@ -428,6 +438,10 @@ GUI.Draw()
 API.Write_LoopyLoop(true)
 while(API.Read_LoopyLoop())
 do  
+    print(isHoleActive() ," Hole")
+    print(isHappyHour() ," Happy")
+    print(fail)
+    print(ncount)
     idleCheck()
 API.DoRandomEvents()
     if API.ReadPlayerMovin2() then
