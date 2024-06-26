@@ -437,12 +437,8 @@ API.SetDrawTrackedSkills(true)
 GUI.Draw()
 API.Write_LoopyLoop(true)
 while(API.Read_LoopyLoop())
-do  
-    print(isHoleActive() ," Hole")
-    print(isHappyHour() ," Happy")
-    print(fail)
-    print(ncount)
-    idleCheck()
+do 
+idleCheck()
 API.DoRandomEvents()
     if API.ReadPlayerMovin2() then
         API.RandomSleep2(600,100,100)
