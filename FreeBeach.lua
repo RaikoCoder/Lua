@@ -33,6 +33,18 @@ end
 local function isGeorge()
     return API.Buffbar_GetIDstatus(Buffs.George,false).found
 end
+local function isDungPot()
+    return API.Buffbar_GetIDstatus(Buffs.Lemon,false).found
+end
+local function isFishFarmHunt()
+    return API.Buffbar_GetIDstatus(Buffs.Pineapple,false).found
+end
+local function isCookSand()
+    return API.Buffbar_GetIDstatus(Buffs.Purple,false).found
+end
+local function isCombat()
+    return API.Buffbar_GetIDstatus(Buffs.Pfizz,false).found
+end
 
 local Sand_npc = {
     Sedridor = 21164,
@@ -201,6 +213,9 @@ local function DoEvents()
     local EventTypes = GUI.GetComponentValue("Events")
     if EventTypes == "Strength" then
         GUI.UpdateLabelText("Title","Lets Get BUFFED!")
+        if isCombat() == false and (API.InvItemcount_1(Buffs.Pfizz) >= 1) then
+            API.DoAction_Inventory1(Buffs.Pfizz,0,1,API.OFF_ACT_GeneralInterface_route)
+        end
         Bodybulding()
         if (not isHappyHour()) then
             RenewbeachTemp()
@@ -212,6 +227,10 @@ local function DoEvents()
             if getBeachTemperature() == 294 then
                 API.DoAction_Inventory1(51729,0,1,API.OFF_ACT_GeneralInterface_route)
             end
+        end
+
+        if isDungPot() ==false and (API.InvItemcount_1(Buffs.Lemon) >= 1) then
+            API.DoAction_Inventory1(Buffs.Lemon,0,1,API.OFF_ACT_GeneralInterface_route)
         end
         --Dungeoneering
         GUI.UpdateLabelText("Title","Going in the Hole!")
@@ -237,6 +256,9 @@ local function DoEvents()
             API.DoAction_Inventory1(51732,0,1,API.OFF_ACT_GeneralInterface_route)
             end
         end
+        if isFishFarmHunt() == false and (API.InvItemcount_1(Buffs.Pineapple) >= 1) then
+            API.DoAction_Inventory1(Buffs.Pineapple,0,1,API.OFF_ACT_GeneralInterface_route)
+        end
         GUI.UpdateLabelText("Title","Going Fishing")
             if API.ReadPlayerAnim() <= 2  then
                 API.DoAction_NPC_str(0x29,API.OFF_ACT_InteractNPC_route,{"Fishing spot"},50)
@@ -256,6 +278,9 @@ local function DoEvents()
             if getBeachTemperature() == 294 then
             API.DoAction_Inventory1(51731,0,1,API.OFF_ACT_GeneralInterface_route)
             end
+        end
+        if isFishFarmHunt() == false and (API.InvItemcount_1(Buffs.Pineapple) >= 1) then
+            API.DoAction_Inventory1(Buffs.Pineapple,0,1,API.OFF_ACT_GeneralInterface_route)
         end
         skillxps = API.GetSkillXP("FARMING")
         if (skillxps ~= skillxpsold) then
@@ -296,6 +321,9 @@ local function DoEvents()
             if getBeachTemperature() == 294 then
             API.DoAction_Inventory1(51733,0,1,API.OFF_ACT_GeneralInterface_route)
             end
+        end
+        if isCookSand() == false and (API.InvItemcount_1(Buffs.Purple) >= 1) then
+            API.DoAction_Inventory1(Buffs.Purple,0,1,API.OFF_ACT_GeneralInterface_route)
         end
         GUI.UpdateLabelText("Title","Going to Build Sand Castles")
         skillxps = API.GetSkillXP("CONSTRUCTION")
@@ -345,6 +373,9 @@ local function DoEvents()
             API.DoAction_Inventory1(51730,0,1,API.OFF_ACT_GeneralInterface_route)
             end
         end
+        if isFishFarmHunt() == false and (API.InvItemcount_1(Buffs.Pineapple) >= 1) then
+            API.DoAction_Inventory1(Buffs.Pineapple,0,1,API.OFF_ACT_GeneralInterface_route)
+        end
         GUI.UpdateLabelText("Title","Going to Hunt Ducks!")
         if not API.PInArea21(3168,3174,3209,3216) then
             goToTile(3170,3212,0)
@@ -365,12 +396,17 @@ local function DoEvents()
     end
     if EventTypes == "Cooking" then
         GUI.UpdateLabelText("Title","Going to Cook Fishes!")
+        if isCookSand() == false and (API.InvItemcount_1(Buffs.Purple) >= 1) then
+            API.DoAction_Inventory1(Buffs.Purple,0,1,API.OFF_ACT_GeneralInterface_route)
+        end
         if not API.PInArea21(3173,3181,3249,3254) then
             API.DoAction_WalkerW(WPOINT.new( 3175+ math.random(-2, 2), 3251 + math.random(-2, 2), 0))
         else
             if API.ReadPlayerAnim() <= 2  then
+                if isHappyHour() or isDuck() or getBeachTemperature() <= 293 then
                 API.DoAction_Object1(0x40,API.OFF_ACT_GeneralObject_route0,{ 97276 },50)
                 API.RandomSleep2(1200,100,100)
+                end
             end
         end
         if (not isHappyHour()) then
