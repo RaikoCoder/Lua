@@ -347,7 +347,7 @@ local function DoEvents()
         API.RandomSleep2(2600,100,200)
         end
     if API.PInArea21(3141,3166,3231,3258) then
-        if  not API.ReadPlayerMovin2() and (not API.CheckAnim(50)) then
+        if  not API.ReadPlayerMovin2() and (not API.CheckAnim(100)) then
             if isHappyHour() or isGeorge() or getBeachTemperature() <= 293 then
             if findNPC(Sand_npc.Duke,25) then
                 API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{97424,97425,97426,97427},50,true)
