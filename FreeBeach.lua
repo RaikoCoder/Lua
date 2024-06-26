@@ -119,6 +119,8 @@ local function Bodybulding()
         end
     end
 end
+
+
 local function goToTile(x, y, z) --random coord selection
     if x and y and z then
         math.randomseed(os.time())
@@ -159,26 +161,39 @@ end
 
 local function isHappyHour()
     local spot = getSpotlight()
-    if spot == nil or spot == '' then return false end
+    if spot == nil or spot == '' then 
+        return false 
+    end
     return string.find(spot, 'Happy Hour')
 end
+
+
 local ncount = 0 
+local fail = 0 
 local function RenewbeachTemp()
+ 
  if getBeachTemperature() == 294 and ncount == 0 then
     if API.InvItemFound1(35049) then
         API.DoAction_Inventory1(35049, 0, 1, API.OFF_ACT_GeneralInterface_route)
         API.RandomSleep2(1200, 200, 200)
         ncount = ncount + 1
     end
+end
     if ncount == 1 and getBeachTemperature() ~= 294 then
         API.RandomSleep2(1200,200,200)
         print("Yay Ice Cream")
         ncount = 0 
     end
-    if ncount == 1 and getBeachTemperature() == 294 then
-                API.Write_LoopyLoop(false)
+    if ncount >= 1 and getBeachTemperature() == 294 then
+        API.RandomSleep2(1800,200,200)
+        print("Sleeping for 30 seconds")
+        fail = fail + 1 
+        ncount = ncount + 1
     end
-        end
+    if fail >= 3 and ncount >= 3 then
+        API.Write_LoopyLoop(false)
+    end
+       
     
  end
 local function DoEvents()
@@ -187,13 +202,13 @@ local function DoEvents()
     if EventTypes == "Strength" then
         GUI.UpdateLabelText("Title","Lets Get BUFFED!")
         Bodybulding()
-        if isHappyHour() == false then
+        if (not isHappyHour()) then
             RenewbeachTemp()
         end
     end
        
     if EventTypes == "Dungeoneering" then
-        if (API.InvItemcount_1(51729) >=1) and (not isHoleActive()) and (not isHappyHour()) then
+        if (API.InvItemcount_1(51729) >=1) and isHoleActive() ==false  and (not isHappyHour()) then
             if getBeachTemperature() == 294 then
                 API.DoAction_Inventory1(51729,0,1,API.OFF_ACT_GeneralInterface_route)
             end
@@ -204,18 +219,20 @@ local function DoEvents()
             goToTile(3169,3247,0)
             API.RandomSleep2(2600,100,100)
         else
+            if isHoleActive() == false  and (not isHappyHour())  then
+                RenewbeachTemp()
+            end
             ---Start Dungeoneering--
             if API.ReadPlayerAnim() <= 2 and (isHappyHour() or isHoleActive() or getBeachTemperature() <= 293 )  then
                 API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route0,{ 114121 },50)
                 API.RandomSleep2(1800,100,100)
+                
             end
-            if isHoleActive() == false  or isHappyHour() == false  then
-                RenewbeachTemp()
-            end
+            
         end
     end
     if EventTypes == "Fishing" then
-        if API.InvItemFound1(51732) and (not isHappyHour()) and (not isFisher()) then
+        if API.InvItemFound1(51732) and (not isHappyHour()) and isFisher() == false then
             if getBeachTemperature() == 294 then
             API.DoAction_Inventory1(51732,0,1,API.OFF_ACT_GeneralInterface_route)
             end
@@ -229,13 +246,13 @@ local function DoEvents()
                     API.RandomSleep2(600,200,200)
                 end
             end
-            if isHappyHour() == false or isFisher() == false  then
+            if (not isHappyHour()) and isFisher() == false  then
                 RenewbeachTemp()
             end
         end
         --Fishing
     if EventTypes == "Farming" then
-        if API.InvItemFound1(51731) and (not isHappyHour()) and (not isFarm()) then
+        if API.InvItemFound1(51731) and (not isHappyHour()) and isFarm() == false   then
             if getBeachTemperature() == 294 then
             API.DoAction_Inventory1(51731,0,1,API.OFF_ACT_GeneralInterface_route)
             end
@@ -266,7 +283,7 @@ local function DoEvents()
                 API.RandomSleep2(1800,100,100)
             end
         end
-        if isHappyHour() == false or isFarm() == false  then
+        if (not isHappyHour()) and isFarm() == false  then
             RenewbeachTemp()
         end
         --Farming
@@ -275,7 +292,7 @@ local function DoEvents()
     end
 
     if EventTypes == "Construction" then
-        if API.InvItemFound1(51733) and (not isHappyHour()) and (not isGeorge()) then
+        if API.InvItemFound1(51733) and (not isHappyHour()) and isGeorge() == false then
             if getBeachTemperature() == 294 then
             API.DoAction_Inventory1(51733,0,1,API.OFF_ACT_GeneralInterface_route)
             end
@@ -307,7 +324,7 @@ local function DoEvents()
                end
             end
         end
-        if isHappyHour() == false or isGeorge() == false  then
+        if (not isHappyHour()) and isGeorge() == false  then
             RenewbeachTemp()
         end
     end
@@ -323,7 +340,7 @@ local function DoEvents()
             API.RandomSleep2(800,200,200)
         fail_count = fail_count +1
         end 
-        if API.InvItemFound1(51730) and (not isHappyHour()) and (not isDuck()) then
+        if API.InvItemFound1(51730) and (not isHappyHour()) and isDuck() == false then
             if getBeachTemperature() == 294 then
             API.DoAction_Inventory1(51730,0,1,API.OFF_ACT_GeneralInterface_route)
             end
@@ -340,7 +357,7 @@ local function DoEvents()
                     API.RandomSleep2(1200,100,100)
                 end
             end
-            if isHappyHour() == false or isDuck() == false  then
+            if (not isHappyHour()) or isDuck() == false  then
                 RenewbeachTemp()
         end
     end
@@ -356,7 +373,7 @@ local function DoEvents()
                 API.RandomSleep2(1200,100,100)
             end
         end
-        if isHappyHour() == false then
+        if (not isHappyHour()) then
             RenewbeachTemp()
         end
         --Cooking
@@ -367,12 +384,19 @@ local function DoEvents()
     end
 end
 
+
+
+
 API.SetDrawTrackedSkills(true)
 GUI.Draw()
 API.Write_LoopyLoop(true)
 while(API.Read_LoopyLoop())
 do  
-idleCheck()
+    print(isHoleActive() ," Hole")
+    print(isHappyHour() ," Happy")
+    print(fail)
+    print(ncount)
+    idleCheck()
 API.DoRandomEvents()
     if API.ReadPlayerMovin2() then
         API.RandomSleep2(600,100,100)
