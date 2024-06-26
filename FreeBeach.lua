@@ -181,7 +181,7 @@ end
 
 
 local ncount = 0 
-local fail = 0 
+local Step = 0 
 local function RenewbeachTemp()
  
  if getBeachTemperature() == 294 and ncount == 0 then
@@ -199,10 +199,10 @@ end
     if ncount >= 1 and getBeachTemperature() == 294 then
         API.RandomSleep2(1800,200,200)
         print("Sleeping for 30 seconds")
-        fail = fail + 1 
+        Step = Step + 1 
         ncount = ncount + 1
     end
-    if fail >= 3 and ncount >= 3 then
+    if Step >= 3 and ncount >= 3 then
         API.Write_LoopyLoop(false)
     end
        
@@ -227,7 +227,7 @@ local function DoEvents()
             if getBeachTemperature() == 294 then
                 API.DoAction_Inventory1(51729,0,1,API.OFF_ACT_GeneralInterface_route)
                 ncount = 1
-                fail = 0
+                Step = 0
             end
         end
 
@@ -257,7 +257,7 @@ local function DoEvents()
             if getBeachTemperature() == 294 then
             API.DoAction_Inventory1(51732,0,1,API.OFF_ACT_GeneralInterface_route)
             ncount = 1
-                fail = 0
+                Step = 0
             end
         end
         if isFishFarmHunt() == false and (API.InvItemcount_1(Buffs.Pineapple) >= 1) then
@@ -282,7 +282,7 @@ local function DoEvents()
             if getBeachTemperature() == 294 then
             API.DoAction_Inventory1(51731,0,1,API.OFF_ACT_GeneralInterface_route)
             ncount = 1
-                fail = 0
+                Step = 0
             end
         end
         if isFishFarmHunt() == false and (API.InvItemcount_1(Buffs.Pineapple) >= 1) then
@@ -327,7 +327,7 @@ local function DoEvents()
             if getBeachTemperature() == 294 then
             API.DoAction_Inventory1(51733,0,1,API.OFF_ACT_GeneralInterface_route)
             ncount = 1
-                fail = 0
+                Step = 0
             end
         end
         if isCookSand() == false and (API.InvItemcount_1(Buffs.Purple) >= 1) then
@@ -380,7 +380,7 @@ local function DoEvents()
             if getBeachTemperature() == 294 then
             API.DoAction_Inventory1(51730,0,1,API.OFF_ACT_GeneralInterface_route)
             ncount = 1
-                fail = 0
+                Step = 0
             end
         end
         if isFishFarmHunt() == false and (API.InvItemcount_1(Buffs.Pineapple) >= 1) then
@@ -391,17 +391,19 @@ local function DoEvents()
             goToTile(3170,3212,0)
             API.RandomSleep2(2600,100,200)
         else
-            if isHappyHour() or isDuck() or getBeachTemperature() <= 293 then
-                if API.ReadPlayerAnim() <= 2 and fail_count>=6 then
+            if (isHappyHour() or isDuck() or getBeachTemperature() <= 293 )  then
+                if fail_count>=6 then
                     API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route0,{ 104332 },50)
                     fail_count = 0
                     API.RandomSleep2(1200,100,100)
                 end
             end
-            if (not isHappyHour()) or isDuck() == false  then
+            if isDuck() == false and not isHappyHour() then
                 RenewbeachTemp()
         end
+           
     end
+  
         --Hunter
     end
     if EventTypes == "Cooking" then
@@ -437,8 +439,13 @@ API.SetDrawTrackedSkills(true)
 GUI.Draw()
 API.Write_LoopyLoop(true)
 while(API.Read_LoopyLoop())
-do 
-idleCheck()
+do  
+    print(isHoleActive() ," Hole")
+    print(isHappyHour() ," Happy")
+    print(Step)
+    print(ncount)
+    print(isDuck(),"Duck") 
+    idleCheck()
 API.DoRandomEvents()
     if API.ReadPlayerMovin2() then
         API.RandomSleep2(600,100,100)
