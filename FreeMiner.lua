@@ -2,7 +2,7 @@
 TO USE 
 Empty inventory with Orebox or none at all~ pick whatever ore you want thats available
 
------NECRITE IS STILL UNDER Testing it currently works but dont click sparkles -- :( 
+-----NECRITE IS STILL UNDER TESTING-----
 v1.5 Fixed bugs its overlapping each others if's and running the wrong ore
 v1.0 Added Banite, Necrite , Phasmatite,Drakolith 
 v0.15 Fixed Luminite 
@@ -63,8 +63,8 @@ local ores = {
     Banite = {113140,113141,113142},
     Necrite = {113206,113207,113208},
    
-   -- LightAnimica = {},
-    --DarkAnimica = {}
+   LightAnimica = {113018}, --5340,2255,0 Coords
+    DarkAnimica = {113020,113021,113022}
 
 }
 local oresID = {
@@ -139,6 +139,49 @@ local function RetrieveRandomOreId()
     local tbl = ores[selectedOre]
     return tbl[math.random(1, #tbl)]
 end
+local function findobjtile() -- Iterates data from the optimal location
+    Right = API.GetAllObjArray1({7164, 7165}, 50, {4})
+    for _k, v in pairs(Right) do
+        -- Assuming v has fields TileX and TileY
+        local x = math.floor(v.TileX / 512)
+        local y = math.floor(v.TileY / 512)
+        return x, y, 0
+    end
+    return false, false, false
+end
+
+local function NecriteMining()
+    if not API.InvFull_() then
+        if API.Invfreecount_() <= 3 then
+            OresboxCheck()
+        end
+        if not API.IsPlayerAnimating_(plr, 3) then
+            API.RandomSleep2(600, 600, 600)    
+            if not API.IsPlayerAnimating_(plr, 2) then
+                --Starts Mining
+                API.DoAction_Object_r(0x3a,API.OFF_ACT_GeneralObject_route0, {113206, 113207, 113208}, 50, FFPOINT.new(0, 0, 0), 50)
+            end
+        else
+            math.randomseed(os.time())
+        if API.LocalPlayer_HoverProgress() < 105 + math.random(-30,60) then
+            local x, y, z = findobjtile()
+            if x and y then
+                local tile = WPOINT.new(x, y, z)
+                API.DoAction_Object_valid2(0x3a, API.OFF_ACT_GeneralObject_route0, {113206, 113207, 113208}, 30, tile, false)
+                API.RandomSleep2(600, 800, 1000)
+                API.WaitUntilMovingEnds(10, 2)
+                return true
+        else
+   -- If no sparkling rock was found, mine the first ore in the shuffled list
+   API.DoAction_Object_r(0x3a,API.OFF_ACT_GeneralObject_route0,{113206, 113207, 113208},50,FFPOINT.new(0, 0, 0),50)
+   API.RandomSleep2(1200,300,600)
+end
+    end
+end
+end
+end
+
+
 local function MineOre()
     if not API.InvFull_() then
         if API.Invfreecount_() <= 3 then
@@ -153,13 +196,14 @@ local function MineOre()
     else
         math.randomseed(os.time())
         if API.LocalPlayer_HoverProgress() < 105 + math.random(-30,60) then
-        -- Try to find and mine a sparkling rock
         local foundSparkling = API.DOFindHl(0x3a, API.OFF_ACT_GeneralObject_route0, ores[selectedOre], 50, { 7165, 7164})
         if foundSparkling then
             print("Sparkle vein found, clicking..")
             API.DOFindHl(0x3a, API.OFF_ACT_GeneralObject_route0, ores[selectedOre], 50, { 7165, 7164})
             API.RandomSleep2(1200,300,600)  
         else
+           
+
             -- If no sparkling rock was found, mine the first ore in the shuffled list
             API.DoAction_Object_r(0x3a,API.OFF_ACT_GeneralObject_route0,ores[selectedOre],50,FFPOINT.new(0, 0, 0),50)
             API.RandomSleep2(1200,300,600)
@@ -169,13 +213,16 @@ local function MineOre()
 
 end end
 
+
+
+
 --Burthope for Iron Below-
 local function GotoBurth()
     if API.CheckAnim(5) then
         API.RandomSleep2(300,200,100)
         goto hello
     end
-    if not API.PInArea(2899,2,3544,2,0) and isBurthMine == false then
+    if not API.PInArea(2899,2,3544,2,0) and isBurthMine == false and  not API.InvFull_() then
         LODESTONE.Burthope()
         isBurthMine = true
         
@@ -232,11 +279,10 @@ local function DepositBarb()
 end
 local function GotoEdge()
     if API.CheckAnim(10) then
-
- API.RandomSleep2(300,200,100)
+    API.RandomSleep2(300,200,100)
         goto hello
     end
-       if not API.PInArea(3067,4,3505,4,0) and isCoalmine == false then
+       if not API.PInArea(3067,4,3505,4,0) and isCoalmine == false and  not API.InvFull_()  then
         LODESTONE.Edgeville()
         API.RandomSleep2(1200,300,600)
         isCoalmine = true
@@ -277,7 +323,7 @@ local function GotoMith()
         API.RandomSleep2(600, 600, 600)
         goto hello
     end
-    if not API.PInArea(3214,4,3376,4,0) and isMithmine  == false then
+    if not API.PInArea(3214,4,3376,4,0) and isMithmine  == false and  not API.InvFull_() then
         LODESTONE.Varrock()
         API.RandomSleep2(1200,300,600)
         isMithmine = true
@@ -293,7 +339,10 @@ local function GotoMith()
     API.RandomSleep2(1200,500,600)
 end
 local function BankingforMith()
-   
+    if API.CheckAnim(10) then
+        API.RandomSleep2(600, 600, 600)
+        goto hello
+    end
     if not API.PInArea(3183,4,3423,4,0) and isMithmine == true then
         goToTile(3183,3423,0)
     end
@@ -304,7 +353,8 @@ local function BankingforMith()
             isMithmine = false
             countore = 0
     end
-   
+   ::hello::
+    API.RandomSleep2(1200,500,600)
 end
 local function MiningMithVarrock()
    
@@ -338,7 +388,7 @@ local function GotoAddy()
         API.RandomSleep2(600, 600, 600)
         goto hello
     end
-    if not API.PInArea(3011,4,3215,4,0)then
+    if not API.PInArea(3011,4,3215,4,0) and  not API.InvFull_()then
        LODESTONE.PortSarim()
        API.RandomSleep2(1200,300,600)
        isAdaMine = true
@@ -401,7 +451,7 @@ local function GotoMiningGuild()
         API.RandomSleep2(600, 600, 600)
         goto hello
     end
-    if selectedOre == "Runite" or selectedOre == "Orikalchite" then
+    if ((selectedOre == "Runite" ) or (selectedOre == "Orikalchite"))  and  not API.InvFull_() then
         if API.PInArea(3011,4,3215,4,0) and isLumiMine == false  then
             isRuneMine = true
             isOrikalchite = true
@@ -445,7 +495,7 @@ local function gotoLuminite()
         API.RandomSleep2(600, 600, 600)
         goto hello
     end
-    if selectedOre == "Luminite"  then
+    if selectedOre == "Luminite" and  not API.InvFull_() then
        
         if API.PInArea(3011,4,3215,4,0) and isLumiMine == false and isRuneMine == false then
             API.DoAction_WalkerW(WPOINT.new(3027 + math.random(-2, 2), 3336 + math.random(-2, 2), 0))
@@ -572,8 +622,8 @@ local function gotoDrakolith()
         API.RandomSleep2(600, 600, 600)
         goto hello
     end
-    if selectedOre == "Drakolith" then
-        if not API.PInArea(3143,4,3635,4,0) then
+    if selectedOre == "Drakolith" and  not API.InvFull_() then
+        if not API.PInArea(3143,4,3635,4,0) and isDrakolith == false then
             LODESTONE.Wilderness()
             isDrakolith = true
             if API.PInArea(3143,4,3635,4,0) and isDrakolith == true then
@@ -632,7 +682,7 @@ local function gotoPhasmatite()
         API.RandomSleep2(600, 600, 600)
         goto hello
     end
-    if not API.PInArea(3517,4,3515,4,0)then
+    if not API.PInArea(3517,4,3515,4,0) and  not API.InvFull_() then
         LODESTONE.Canifis()
         isPhasmatite = true
         API.RandomSleep2(1200,300,600)
@@ -692,7 +742,7 @@ local function gotoBanite()
        API.RandomSleep2(600, 600, 600)
        goto hello
    end
-    if not API.PInArea(3067,2,3505,2,0) and isBanite == false then
+    if not API.PInArea(3067,2,3505,2,0) and isBanite == false and  not API.InvFull_() then
          LODESTONE.Edgeville()
          isBanite = true
          API.RandomSleep2(1200,300,600)
@@ -760,16 +810,22 @@ local function isUzerInt()
     return API.Compare2874Status(81, false)
 end
 local function GetHP()
+    local sidestep = 0
     if API.CheckAnim(10) then
         API.RandomSleep2(600, 600, 600)
         goto hello
     end
-    if PlayerHP() <= 50 and not API.PInArea(2899,3,3544,3,0) then
+    if PlayerHP() < 90 and not API.PInArea(2899,3,3544,3,0) and sidestep == 0 then
         LODESTONE.Burthope()
+        sidestep = 1
     end
-    if API.PInArea(2899,2,3544,2,0) and PlayerHP() <= 90 then
+    if API.PInArea(2899,2,3544,2,0) and PlayerHP() <= 90 and sidestep == 1 then
         goToTile(2888,3536,0)
-        isNecrite = false
+        API.RandomSleep2(2000,200,200)
+        if PlayerHP() >= 95 then
+            isNecrite = false
+        end
+        
     end
 ::hello::
 API.RandomSleep2(1200,200,200)
@@ -782,7 +838,7 @@ local function gotoNecrite()
         API.RandomSleep2(600, 600, 600)
         goto hello
     end
-    if not API.PInArea(3297,4,3184,4,0) and step == 0  and isNecrite == false then
+    if not API.PInArea(3297,4,3184,4,0) and step == 0  and isNecrite == false  and  not API.InvFull_() then
         LODESTONE.AlKharid()
         isNecrite = true
         API.RandomSleep2(1200,300,600)
@@ -813,6 +869,10 @@ local function gotoNecrite()
     API.RandomSleep2(1200,200,200)
 end
 local function BankingNecrite()
+    if API.CheckAnim(10) then
+        API.RandomSleep2(600, 600, 600)
+        goto hello
+    end
     if not API.PInArea(3233,4,3221,4,0) and isNecrite == true then
         LODESTONE.Lumbridge()
         API.RandomSleep2(1200,300,600)
@@ -824,12 +884,14 @@ local function BankingNecrite()
         isNecrite = false
         countore = 0
         step = 0
-    end      
+    end    
+    ::hello::
+    API.RandomSleep2(1200,200,200)  
 end
 local function MiningNecrite()
-    if selectedOre == "Necrite" and PlayerHP() <= 50 then
+    if selectedOre == "Necrite" and PlayerHP() < 85 then
         GetHP()
-    elseif PlayerHP() >= 90 then
+    elseif PlayerHP() > 85 then
             gotoNecrite()
         end
         if API.InvItemFound2({44793,44795,44797}) then
@@ -837,7 +899,7 @@ local function MiningNecrite()
         end
         if isNecrite == true then
             if not API.InvFull_() and PlayerHP() >= 40 then
-                MineOre()
+                NecriteMining()
             elseif PlayerHP() <= 40 then
                 
                 if not API.PInArea(3465,2,3138,2,0) then
@@ -861,10 +923,106 @@ local function MiningNecrite()
         end
     end
 --end of Necrite
+
+--Start Of DarkAnimica
+local function gotoDark()
+    if API.CheckAnim(10) then
+        API.RandomSleep2(600, 600, 600)
+        goto hello
+    end
+    ::hello::
+    API.RandomSleep2(600, 600, 600)
+end
+local function BankingDark()
+    
+end
+local function MiningDark()
+    
+end
+--end of DarkAnimica
+
+local Step = 0
+--Start of lightAnimica --walk coords --5340,2255,0 Coords
+local function gotoLight()
+    if API.CheckAnim(10) then
+        API.RandomSleep2(600, 600, 600)
+        goto hello
+    end
+    if API.PInArea(5431,3,2338,3,0) then
+        isLight = true
+    end
+if not API.PInArea(5431,3,2338,3,0) and isLight == false then
+    LODESTONE.Anachronia()
+    API.RandomSleep2(1200,300,600)
+    isLight = true
+end
+if API.PInArea(5361,3,2301,3,0)  then
+    Step = 1
+end
+if API.PInArea(5431,3,2338,3,0) and isLight == true and Step == 0 then
+    API.DoAction_WalkerW(WPOINT.new(5361 + math.random(-2, 2),2301 + math.random(-2, 2),0))
+    API.RandomSleep2(1200,300,600)
+    Step = 1
+end
+if Step == 1 and API.PInArea(5361,3,2301,3,0) then
+    API.DoAction_WalkerW(WPOINT.new(5349 + math.random(-2, 2),2266 + math.random(-2, 2),0))
+        Step = 2
+end
+if API.PInArea(5340,4,2255,4,0)  then
+    Step = 2
+end
+if API.PInArea(5340,4,2255,4,0) and Step == 2 then
+    print("Light Animica Area")
+end
+
+    ::hello::
+    API.RandomSleep2(1600, 600, 600)
+end
+local function BankingLight()
+    if API.CheckAnim(10) then
+        API.RandomSleep2(600, 600, 600)
+        goto hello
+    end
+    if not API.PInArea(3233,4,3221,4,0) and isLight == true then
+        LODESTONE.Lumbridge()
+        API.RandomSleep2(1200,300,600)
+    end
+    if API.PInArea(3233,4,3221,4,0) and isLight == true and isDeposit == false then
+        API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route1,{ 113261 },50) --lumby forge 
+        API.RandomSleep2(1200,300,600)
+        isDeposit = true
+        isLight = false
+        countore = 0
+        Step = 0
+    end    
+    ::hello::
+    API.RandomSleep2(1200,200,200)  
+end
+local function MiningLight()
+    if selectedOre == "LightAnimica" then
+        gotoLight()
+        if API.InvItemFound2({44797}) then
+            oreBox = true
+        end
+        if isLight == true then
+            if not API.InvFull_() then
+                MineOre()
+            end
+        end
+        if API.InvFull_() then
+            isLight = true
+            isDeposit = false
+            BankingLight()
+            API.RandomSleep2(600,600,600)
+        end
+    end
+end
+
+--end of lightAnimica
 API.SetDrawTrackedSkills(true)
 while (API.Read_LoopyLoop()) do
-    API.DoRandomEvents()
     isLoggedout()
+    
  if API.ReadPlayerMovin2() then
     API.RandomSleep2(500,500,400)
     goto continue
@@ -895,6 +1053,9 @@ if selectedOre == "Necrite" then
 end
 if selectedOre == "Banite" then
     MiningBanite()
+end
+if selectedOre == "LightAnimica" then
+    MiningLight()
 end
 --MiningNecrite()
 --print(API.PInArea21(3035,3042,9760,9766))
