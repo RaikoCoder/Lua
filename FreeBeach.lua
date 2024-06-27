@@ -2,9 +2,6 @@ local API = require("api")
 local GUI = require("gui")
 startTime, afk = os.time(), os.time()
 MAX_IDLE_TIME_MINUTES = 5
-local skillxps = API.GetSkillXP("CONSTRUCTION")
-local skillxpsold = 0
-local fail_count = 0
 --HIGGINS CODES----
 local Buffs = {
 -- BUFF/STATUS EFFECT IDS
@@ -34,8 +31,8 @@ local function StrengthTraining() return API.VB_FindPSettinOrder(779, 1).state =
 local sand_castle = {Duke = {97424,97425,97426,97427},Ozan = {109550,109551,109552},Sally = {97420,97421,97422,97423},Sedridor = {97416,97417,97418,97419},
 }
 GUI.AddBackground("Background", 1, 1, ImColor.new(15, 13, 18, 255))
-GUI.AddLabel("Title", "Beach Event AIO", ImColor.new(255, 255, 255))
-GUI.AddComboBox("Events","Events",{"","Dungeoneering","Strength","Cooking","Fishing","Farming","Construction","Hunter"})
+GUI.AddLabel("Title", "Beach Events", ImColor.new(255, 255, 255))
+GUI.AddComboBox("Events","Events",{"Clawdia","Dungeoneering","Strength","Cooking","Fishing","Farming","Construction","Hunter"})
 local function idleCheck()
     local timeDiff = os.difftime(os.time(), afk)
     local randomTime = math.random((MAX_IDLE_TIME_MINUTES * 60) * 0.6, (MAX_IDLE_TIME_MINUTES * 60) * 0.9)
@@ -122,34 +119,45 @@ local function isHappyHour()
 end
 
 
-local ncount = 0 
-local Step = 0 
+local ncount = 0
+local Step = 0
 local function RenewbeachTemp()
- 
- if getBeachTemperature() == 294 and ncount == 0 then
-    if API.InvItemFound1(35049) then
-        API.DoAction_Inventory1(35049, 0, 1, API.OFF_ACT_GeneralInterface_route)
-        API.RandomSleep2(1200, 200, 200)
-        ncount = ncount + 1
+    if getBeachTemperature() == 294 and ncount == 0 then
+        if API.InvItemFound1(35049) then
+            API.DoAction_Inventory1(35049, 0, 1, API.OFF_ACT_GeneralInterface_route) -- Eat Ice cream
+            API.RandomSleep2(1200, 200, 200)
+            ncount = ncount + 1
+        end
     end
-end
+
     if ncount == 1 and getBeachTemperature() ~= 294 then
-        API.RandomSleep2(1200,200,200)
+        API.RandomSleep2(1200, 200, 200)
         print("Yay Ice Cream")
-        ncount = 0 
+        ncount = 0
     end
+
     if ncount >= 1 and getBeachTemperature() == 294 then
-        API.RandomSleep2(1800,200,200)
+        API.RandomSleep2(1800, 200, 200)
         print("Sleeping for 30 seconds")
-        Step = Step + 1 
+        Step = Step + 1
         ncount = ncount + 1
     end
+
     if Step >= 3 and ncount >= 3 then
+        if API.InvItemFound1(35049) then
+            API.DoAction_Inventory1(35049, 0, 1, API.OFF_ACT_GeneralInterface_route) -- Try eating ice cream one more time
+            API.RandomSleep2(1200, 200, 200)
+            if getBeachTemperature() ~= 294 then
+                print("Yay Ice Cream")
+                ncount = 0
+                Step = 0
+                return
+            end
+        end
         API.Write_LoopyLoop(false)
     end
-       
-    
- end
+end
+
 local function DoEvents()
 
     local EventTypes = GUI.GetComponentValue("Events")
@@ -182,7 +190,7 @@ local function DoEvents()
                 RenewbeachTemp()
             end
            
-            if API.ReadPlayerAnim() <= 2 and (isHappyHour() or isHoleActive() or getBeachTemperature() <= 293 )  then
+            if API.ReadPlayerAnim() <= 2 and not API.CheckAnim(25) and (isHappyHour() or isHoleActive() or getBeachTemperature() <= 293 )  then
                 API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route0,{ 114121 },50)
                 API.RandomSleep2(1800,100,100)
                 
