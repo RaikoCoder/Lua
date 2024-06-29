@@ -33,6 +33,7 @@ local sand_castle = {Duke = {97424,97425,97426,97427},Ozan = {109550,109551,1095
 GUI.AddBackground("Background", 1, 1, ImColor.new(15, 13, 18, 255))
 GUI.AddLabel("Title", "Beach Events", ImColor.new(255, 255, 255))
 GUI.AddComboBox("Events","Events",{"Clawdia","Dungeoneering","Strength","Cooking","Fishing","Farming","Construction","Hunter"})
+GUI.AddCheckbox("Heatwave","Heatwave")
 local function idleCheck()
     local timeDiff = os.difftime(os.time(), afk)
     local randomTime = math.random((MAX_IDLE_TIME_MINUTES * 60) * 0.6, (MAX_IDLE_TIME_MINUTES * 60) * 0.9)
@@ -157,7 +158,13 @@ local function RenewbeachTemp()
         API.Write_LoopyLoop(false)
     end
 end
-
+local function isHeatwave()
+    local Heat = GUI.GetComponentValue("Heatwave")
+    if Heat ~= nil then
+        print(Heat)
+        return true
+    end
+end
 local function DoEvents()
 
     local EventTypes = GUI.GetComponentValue("Events")
@@ -189,11 +196,11 @@ local function DoEvents()
             if isHoleActive() == false  and (not isHappyHour())  then
                 RenewbeachTemp()
             end
-           
-            if API.ReadPlayerAnim() <= 2 and not API.CheckAnim(25) and (isHappyHour() or isHoleActive() or getBeachTemperature() <= 293 )  then
+               if API.ReadPlayerAnim() <= 2 and not API.CheckAnim(15) then
+               if isHeatwave() or isHappyHour() or isHoleActive() or getBeachTemperature() <= 293 then
                 API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route0,{ 114121 },50)
                 API.RandomSleep2(1800,100,100)
-                
+               end
             end
     end --End Dungeoneering
     if EventTypes == "Fishing" then --Start Fish
@@ -208,13 +215,15 @@ local function DoEvents()
             API.DoAction_Inventory1(Buffs.Pineapple,0,1,API.OFF_ACT_GeneralInterface_route)
         end
         GUI.UpdateLabelText("Title","Going Fishing")
-        if  not API.ReadPlayerMovin2() and (not API.CheckAnim(75)) then
+        if  not API.ReadPlayerMovin2() and (not API.CheckAnim(25)) then
+            if isHeatwave() or isHappyHour() or isHoleActive() or getBeachTemperature() <= 293 then
                 API.DoAction_NPC_str(0x29,API.OFF_ACT_InteractNPC_route,{"Fishing spot"},50)
                 API.RandomSleep2(1800,100,100)
                 if API.InvFull_() then
                     API.DoAction_NPC_str(0x29,API.OFF_ACT_InteractNPC_route,{ "Wellington" },50)
                     API.RandomSleep2(600,200,200)
                 end
+            end
             end
             if (not isHappyHour()) and isFisher() == false  then
                 RenewbeachTemp()
@@ -231,8 +240,8 @@ local function DoEvents()
             API.DoAction_Inventory1(Buffs.Pineapple,0,1,API.OFF_ACT_GeneralInterface_route)
         end
         GUI.UpdateLabelText("Title","Going to Get Some Coconuts! ")
-        if  not API.ReadPlayerMovin2() and (not API.CheckAnim(75)) then
-        if isHappyHour() or isFarm() or getBeachTemperature() <= 293 then
+        if  not API.ReadPlayerMovin2() and (not API.CheckAnim(50)) then
+            if isHeatwave() or isHappyHour() or isHoleActive() or getBeachTemperature() <= 293 then
             API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{117506,117500,117510},25,true)
             API.RandomSleep2(1800,100,100)
             if API.InvFull_() then
@@ -250,7 +259,7 @@ local function DoEvents()
         end
         GUI.UpdateLabelText("Title","Going to Build Sand Castles")
         if  not API.ReadPlayerMovin2() and (not API.CheckAnim(75)) then
-            if isHappyHour() or isGeorge() or getBeachTemperature() <= 293 then
+            if isHeatwave() or isHappyHour() or isHoleActive() or getBeachTemperature() <= 293 then
             if findNPC(Sand_npc.Duke,25) then
                 API.DoAction_Object_valid1(0x29,API.OFF_ACT_GeneralObject_route0,{97424,97425,97426,97427},50,true)
             elseif findNPC(Sand_npc.Ozan,25) then
@@ -284,7 +293,7 @@ local function DoEvents()
             API.RandomSleep2(2600,100,200)
         else
             if  not API.ReadPlayerMovin2() and (not API.CheckAnim(75)) then
-            if isHappyHour() or isDuck() or getBeachTemperature() <= 293  then
+                if isHeatwave() or isHappyHour() or isHoleActive() or getBeachTemperature() <= 293 then
                     API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route0,{ 104332 },50)
                     API.RandomSleep2(1200,100,100)
             end
@@ -301,7 +310,7 @@ local function DoEvents()
             API.DoAction_WalkerW(WPOINT.new( 3175+ math.random(-2, 2), 3251 + math.random(-2, 2), 0))
         else
             if  not API.ReadPlayerMovin2() and (not API.CheckAnim(75)) then
-                if isHappyHour() or isDuck() or getBeachTemperature() <= 293 then
+                if isHeatwave() or isHappyHour() or isHoleActive() or getBeachTemperature() <= 293 then
                 API.DoAction_Object1(0x40,API.OFF_ACT_GeneralObject_route0,{ 97276 },50)
                 API.RandomSleep2(1200,100,100)
                 end
@@ -329,6 +338,7 @@ API.DoRandomEvents()
         AttackClawdia()
     else 
         if not API.LocalPlayer_IsInCombat_() then
+            isHeatwave()
             DoEvents()
             API.RandomSleep2(600,200,300)
         end
