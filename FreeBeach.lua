@@ -161,7 +161,6 @@ end
 local function isHeatwave()
     local Heat = GUI.GetComponentValue("Heatwave")
     if Heat ~= nil then
-        print(Heat)
         return true
     end
 end
