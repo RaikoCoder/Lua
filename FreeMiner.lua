@@ -958,7 +958,7 @@ local function BankingDark()
         LODESTONE.Lumbridge()
         API.RandomSleep2(1200,300,600)
     end
-    if API.PInArea(3233,4,3221,4,0) and isLight == true and isDeposit == false then
+    if API.PInArea(3233,4,3221,4,0) and isDark == true and isDeposit == false then
         API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route1,{ 113261 },50) --lumby forge 
         API.RandomSleep2(1200,300,600)
         isDeposit = true
