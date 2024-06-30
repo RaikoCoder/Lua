@@ -144,8 +144,6 @@ local function isHappyHour()
             end
         end
     end
-    print("Happy Hour is not active.")
-
     return false
 end
 -- Assuming you already have defined functions for isHeatWave() and isHappyHour() along with getBeachTemperature()
