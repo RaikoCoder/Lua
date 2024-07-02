@@ -188,23 +188,23 @@ local function MineOre()
             OresboxCheck()
         end
         if not API.IsPlayerAnimating_(plr, 3) then
-            API.RandomSleep2(600, 600, 600)
+            API.RandomSleep2(600,100,100)
             if not API.IsPlayerAnimating_(plr, 2) then
                 --Starts Mining
                 API.DoAction_Object_r(0x3a, API.OFF_ACT_GeneralObject_route0, { RetrieveRandomOreId() }, 50,
                     FFPOINT.new(0, 0, 0), 50)
-                    API.RandomSleep2(1200, 300, 600)
+                    API.RandomSleep2(300, 200, 100)
             end
         else
             math.randomseed(os.time())
             if API.LocalPlayer_HoverProgress() < 165 + math.random(-35, 60) then
                 local foundSparkling = API.DOFindHl(0x3a, API.OFF_ACT_GeneralObject_route0, getSelectedOreValues(), 50, { 7165, 7164 })
                 if foundSparkling then
-                    API.RandomSleep2(200, 100,100)
+                    API.RandomSleep2(600,100,100)
                 else
                     -- If no sparkling rock was found, mine the first ore in the shuffled list
                     API.DoAction_Object_r(0x3a, API.OFF_ACT_GeneralObject_route0, getSelectedOreValues(), 50, FFPOINT.new(0, 0, 0), 50)
-                    API.RandomSleep2(1200, 300, 600)
+                    API.RandomSleep2(600,100,100)
                 end
                 
             end
@@ -428,7 +428,6 @@ if API.PInArea21(3181,3190,3630,3636) then nextstep = 2 end -- Drak Spot
         LODESTONE.Wilderness()
         nextstep = nextstep + 1
     end
-    
     if nextMine < 1 and isDrakolith == false then
         if API.PInArea(3143,5,3635,5,0) and nextstep == 1 then
             goToTile(3186,3632,0)
@@ -447,7 +446,8 @@ local function BankingDrako()
     if API.PInArea21(3181,3190,3630,3636) and API.InvFull_() then nextMine = 0 end --drak spot
     if API.PInArea(3297,10,3184,10,0) and API.InvFull_() then nextMine = 1 end --alkharid spot
     if API.PInArea21(3283,3290,3185,3193) and not API.InvFull_() then nextMine = 2 end --furnace
-    if API.PInArea(3143,4,3635,4,0) and not API.InvFull_() then nextMine = 3 end-- Wildy spot 
+    if API.PInArea(3143,2,3635,2,0) and not API.InvFull_() then nextMine = 3 end-- Wildy spot 
+    if API.PInArea21(3181,3190,3630,3636) and not API.InvFull_() then nextMine = 4 isDeposit = false end
     if API.CheckAnim(25) then API.RandomSleep2(600, 200, 100) goto hello end
     if isDeposit == false and API.InvFull_() then
         if nextMine == 0 then
@@ -463,24 +463,23 @@ local function BankingDrako()
             LODESTONE.Wilderness() nextMine = nextMine+1 
         elseif API.PInArea(3143,4,3635,4,0) and nextMine == 3 then
             goToTile(3186,3632,0) 
-            API.RandomSleep2(800,200,100) 
             nextMine = nextMine + 1
+            isDeposit = false
         elseif nextMine == 4 then
-            API.RandomSleep2(800,200,100) 
             isDeposit = false
             nextMine = 0
         end
     end
     ::hello::
     API.RandomSleep2(600,200,100)
-end
+end --of Drakolith
 --Start of Luminite
 local function GotoLumiDung()
     if API.PInArea(2967,8,3403,8,0) then nextstep = 1 end
     if API.PInArea(3027,4,3336,4,0) then nextstep = 2 end
     if API.PInArea(3021,3,9739,3,0) then nextstep = 3 end
     if API.PInArea(1054,10,4516,10,0) then nextstep = 4 isLumiMine = true end
-    if API.CheckAnim(25) then API.RandomSleep2(600, 600, 600) goto hello end
+    if API.CheckAnim(25) then API.RandomSleep2(600,300, 200) goto hello end
     if not API.PInArea(2967,8,3403,8,0) and nextstep == 0 then
         LODESTONE.Falador() API.RandomSleep2(600,200,100) nextstep = nextstep + 1
     end
@@ -488,7 +487,7 @@ local function GotoLumiDung()
     if nextMine < 1 and isLumiMine == false then
     if API.PInArea(2967,8,3403,8,0) and nextstep == 1 then
         API.DoAction_WalkerW(WPOINT.new(3027 + math.random(-2, 2), 3336 + math.random(-2, 2), 0))
-        API.RandomSleep2(1200,300,400) nextstep = nextstep + 1
+        API.RandomSleep2(600,300, 200) nextstep = nextstep + 1
     elseif  nextstep == 2  then
             API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder
             API.RandomSleep2(600,200,100) nextstep = nextstep + 1
@@ -509,7 +508,7 @@ local function BankLumiDung()
     --gong inside
     if API.PInArea(3043,3,3338,3,0) and not API.InvFull_() then nextMine = 3 end --furnace 
     if API.PInArea21(3017,3025,9732,9745) and not API.InvFull_() then nextMine = 4 end--ladder down stairs
-    if API.CheckAnim(25) then API.RandomSleep2(600, 600, 600) goto hello end
+    if API.CheckAnim(25) then API.RandomSleep2(600,300, 200) goto hello end
     if isDeposit == false and API.InvFull_() then
         if nextMine == 0 then
             API.DoAction_Object1(0x39,API.OFF_ACT_GeneralObject_route0,{ 52866 },50) --dungeon door
@@ -535,7 +534,7 @@ local function BankLumiDung()
         end
     end
     ::hello::
-    API.RandomSleep2(1200,500,400)
+    API.RandomSleep2(600,300, 200)
 
 end  --- Dung luminite
 local function GotoLumi()
@@ -544,7 +543,7 @@ local function GotoLumi()
     if API.PInArea(3021,3,9739,3,0) then nextstep = 3 end
     if API.PInArea21(3043,3050,9752,9756) then nextstep = 4 end
     if API.PInArea21(3029,3060,9758,9774) then nextstep = 5 isLumiMine = true end
-    if API.CheckAnim(25) then API.RandomSleep2(600, 600, 600) goto hello end
+    if API.CheckAnim(25) then API.RandomSleep2(600,300, 200) goto hello end
     if not API.PInArea(2967,8,3403,8,0) and nextstep == 0 then
         LODESTONE.Falador() API.RandomSleep2(600,200,100) nextstep = nextstep + 1
     end
@@ -566,7 +565,7 @@ local function GotoLumi()
         end
     end
     ::hello::
-    API.RandomSleep2(1200,500,400)
+    API.RandomSleep2(600,300, 200)
 end
 local function BankingLumi()
        --Going UP 
@@ -637,7 +636,7 @@ local function GotoRuneOri()
 end
 local function BankingForRuneOri()
     if API.CheckAnim(25) then
-        API.RandomSleep2(600, 600, 600)
+        API.RandomSleep2(600,300, 200)
         goto hello
     end
 
@@ -671,7 +670,7 @@ local function BankingForRuneOri()
     end
 
     ::hello::
-    API.RandomSleep2(1200, 500, 400)
+    API.RandomSleep2(600,300, 200)
 end --End of Runite, Orikalchite, ---
 
 
@@ -815,7 +814,6 @@ API.SetDrawTrackedSkills(true)
 while (API.Read_LoopyLoop()) do
     isDungSpot() --isDropOre() -- checkBoxes 
     if API.ReadPlayerMovin2() then
-        API.RandomSleep2(600, 200, 100)
         goto continue
     end
    API.DoRandomEvents()
