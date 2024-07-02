@@ -27,7 +27,7 @@ local ores = {
     Runite = { 113067, 113066, 113065 },
     Luminite = { 113056, 113057, 113058 },
     Orikalchite = { 113070, 113069 },
-    Drakolith = { 113131, 113133, 113132, 113133 },
+    Drakolith = { 113131, 113133, 113132, 113133,113071,113072,113073 },
     Necrite = { 113206, 113207, 113208 },
     Phasmatite = { 113138, 113139, 113137 },
     Banite = { 113140, 113141, 113142 },
@@ -44,7 +44,20 @@ GUI.AddComboBox("Mining", "Ores",
 --GUI.AddCheckbox("Bank", "Deposit Ores")
 --GUI.AddCheckbox("Drop", "Drop Ores")
 GUI.AddCheckbox("Special", "Dung Spot")
-
+local function isDungSpot()
+    local DungeonSpot = GUI.GetComponentValue("Special")
+    if DungeonSpot ~= nil and DungeonSpot ~= false and DungeonSpot ~= 0 and DungeonSpot ~= "" then
+        return true
+    end
+    return false
+end
+local function isDropOre()
+    local DungeonSpot = GUI.GetComponentValue("Drop")
+    if DungeonSpot ~= nil and DungeonSpot ~= false and DungeonSpot ~= 0 and DungeonSpot ~= "" then
+        return true
+    end
+    return false
+end
 local oresID = {
     COPPER = 436,
     TIN = 438,
@@ -100,12 +113,12 @@ local function idleCheck()
 end
 local function OresboxCheck()
     if oreBox == true and countore < 6 then
-        print("Filling ore Box")
+        --print("Filling ore Box")
         API.DoAction_Inventory2(oreBoxes, 0, 1, API.OFF_ACT_GeneralInterface_route)
         countore = countore + 1
         print(countore)
     elseif countore >= 6 then
-        print("Box is Already Filled,Waiting to bank")
+        --print("Box is Already Filled,Waiting to bank")
     end
     if oreBox == false then
         return
@@ -247,8 +260,8 @@ local function DepositOres()
     end
     ::continue::
     API.RandomSleep2(400, 200, 200)
-end
---END OF IRON,Tin,Copper
+end--END OF IRON,Tin,Copper
+
 -- Start of Coal
 local function GotoEdge()
     if API.CheckAnim(25) then
@@ -265,7 +278,7 @@ local function GotoEdge()
     end
     if API.PInArea(3067, 10, 3505, 10, 0) and nextstep == 1 then
         API.DoAction_WalkerW(WPOINT.new(3080 + math.random(-2, 2), 3422 + math.random(-2, 2), 0))
-        print("Reached Edgeville, walking to mining area")
+       print("Reached Edgeville, walking to mining area")
         nextstep = 2
     end
     if API.PInArea(3080, 10, 3422, 10, 0) and nextstep == 2 then
@@ -279,8 +292,8 @@ local function DepositBarb()
         API.DoAction_Object1(0x29, API.OFF_ACT_GeneralObject_route1, {113270}, 50)
         countore = 0
     end
-end
---End of Coal
+end--End of Coal
+
 --Start of Mithril
 local function GotoMith()
     if API.CheckAnim(25) then API.RandomSleep2(600, 100, 100) goto hello end
@@ -309,8 +322,8 @@ local function BankingForMith()
         end
     end
     ::continue:: API.RandomSleep2(400, 200, 200)
-end
---End of Mithril
+end--End of Mithril
+
 --start of Adamantite
 local function GotoAdamant()
     if API.CheckAnim(25) then API.RandomSleep2(600, 100, 100) goto hello end
@@ -340,8 +353,128 @@ local function BankingForAdamant()
         GotoAdamant()
     end
     ::hello:: API.RandomSleep2(600, 100, 100)
+end--end of adamant
+--start of drakolith with Dung 
+local function GotoDraDung()
+if API.PInArea(2967,8,3403,8,0) then nextstep = 1 end --falador
+if API.PInArea(3027,4,3336,4,0) then nextstep = 2 end --outside Ladder 
+if API.PInArea(3021,3,9739,3,0) then nextstep = 3 end --inside near the Ladder
+if API.PInArea21(1048,1066,4504,4523) then nextstep = 4 isDrakolith = true end --inside dungeon
+   
+    if API.CheckAnim(25) then API.RandomSleep2(600, 600, 600) goto hello end
+    if not API.PInArea(2967,8,3403,8,0) and nextstep == 0 then
+        LODESTONE.Falador() API.RandomSleep2(600,200,100) nextstep = nextstep + 1
+    end
+   
+    if nextMine < 1 and isDrakolith == false then
+    if API.PInArea(2967,8,3403,8,0) and nextstep == 1 then
+        API.DoAction_WalkerW(WPOINT.new(3027 + math.random(-2, 2), 3336 + math.random(-2, 2), 0))
+        API.RandomSleep2(1200,300,400) nextstep = nextstep + 1
+    elseif  nextstep == 2  then
+            API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder
+            API.RandomSleep2(600,200,100) nextstep = nextstep + 1
+    elseif nextstep == 3 then
+        API.DoAction_Object1(0x39,API.OFF_ACT_GeneralObject_route0,{ 52856 },50) --dungeon door
+        API.RandomSleep2(600,200,100) nextstep = nextstep + 1
+        isDrakolith = true
+    end
 end
---End of Adamantite
+    ::hello::
+    API.RandomSleep2(600,200,100)
+end
+local function BankDrak()
+     --going out
+     if API.PInArea(1054,15,4516,15,0) and API.InvFull_() then nextMine = 0 end --inside dungeon
+     if API.PInArea21(3017,3025,9732,9745) and API.InvFull_() then nextMine = 1 end
+     if API.PInArea(3021,4,3339,4,0) and API.InvFull_() then nextMine = 2 end --ladder up top
+     --gong inside
+     if API.PInArea(3043,3,3338,3,0) and not API.InvFull_() then nextMine = 3 end --furnace 
+     if API.PInArea21(3017,3025,9732,9745) and not API.InvFull_() then nextMine = 4 end--ladder down stairs
+     if API.PInArea21(1048,1066,4504,4523) then nextMine = 0 isDrakolith = true end
+     if API.CheckAnim(25) then API.RandomSleep2(600, 600, 600) goto hello end
+     if isDeposit == false and API.InvFull_() then
+         if nextMine == 0 then
+             API.DoAction_Object1(0x39,API.OFF_ACT_GeneralObject_route0,{ 52866 },50) --dungeon door
+             nextMine = nextMine + 1
+         elseif nextMine == 1 then
+             API.DoAction_Object1(0x35, API.OFF_ACT_GeneralObject_route0, { 6226 }, 50) --LADDER
+             nextMine = nextMine + 1
+         elseif nextMine == 2 then
+             API.DoAction_Object1(0x29, API.OFF_ACT_GeneralObject_route1, { 113265 }, 50)  -- furnace
+             countore = 0
+             isDeposit = true
+             nextMine = nextMine + 1
+         end
+     end
+     if isDeposit ==true and not API.InvFull_() then
+         if nextMine == 3 then
+             API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder
+             nextMine = nextMine + 1
+         elseif nextMine == 4 then
+             API.DoAction_Object1(0x39,API.OFF_ACT_GeneralObject_route0,{ 52856 },50) --dungeon door
+             nextMine = 0
+             isDeposit = false
+         end
+     end
+     ::hello::
+     API.RandomSleep2(1200,500,400)
+ 
+end -- End of Drakolith wt Dung 
+local function GotoDrako()
+if API.PInArea(3143,4,3635,4,0) then nextstep = 1 end-- Wildy spot 
+if API.PInArea21(3181,3190,3630,3636) then nextstep = 2 end -- Drak Spot 
+    if API.CheckAnim(25) then API.RandomSleep2(600, 600, 600) goto hello end
+    if not API.PInArea(3143,4,3635,4,0) and nextstep == 0 then
+        LODESTONE.Wilderness()
+        nextstep = nextstep + 1
+    end
+    
+    if nextMine < 1 and isDrakolith == false then
+        if API.PInArea(3143,5,3635,5,0) and nextstep == 1 then
+            goToTile(3186,3632,0)
+            nextstep = nextstep + 1
+            API.RandomSleep2(600,100,200)
+        elseif nextstep == 2 then
+            nextstep = nextstep + 1
+            isDrakolith = true
+            isDeposit = false
+        end
+    end
+    ::hello::
+   API.RandomSleep2(600,200,100)
+end
+local function BankingDrako()
+    if API.PInArea21(3181,3190,3630,3636) and API.InvFull_() then nextMine = 0 end --drak spot
+    if API.PInArea(3297,10,3184,10,0) and API.InvFull_() then nextMine = 1 end --alkharid spot
+    if API.PInArea21(3283,3290,3185,3193) and not API.InvFull_() then nextMine = 2 end --furnace
+    if API.PInArea(3143,4,3635,4,0) and not API.InvFull_() then nextMine = 3 end-- Wildy spot 
+    if API.CheckAnim(25) then API.RandomSleep2(600, 200, 100) goto hello end
+    if isDeposit == false and API.InvFull_() then
+        if nextMine == 0 then
+            LODESTONE.AlKharid() nextMine = nextMine + 1
+        elseif nextMine == 1 then
+            API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route1,{ 76293 },50) --alkharid forge
+            isDeposit = true
+            nextMine = nextMine+1 countore = 0
+        end
+    end
+    if isDeposit == true  and not API.InvFull_() then
+        if nextMine == 2 then
+            LODESTONE.Wilderness() nextMine = nextMine+1 
+        elseif API.PInArea(3143,4,3635,4,0) and nextMine == 3 then
+            goToTile(3186,3632,0) 
+            API.RandomSleep2(800,200,100) 
+            nextMine = nextMine + 1
+        elseif nextMine == 4 then
+            API.RandomSleep2(800,200,100) 
+            isDeposit = false
+            nextMine = 0
+        end
+    end
+    ::hello::
+    API.RandomSleep2(600,200,100)
+end
+--Start of Luminite
 local function GotoLumiDung()
     if API.PInArea(2967,8,3403,8,0) then nextstep = 1 end
     if API.PInArea(3027,4,3336,4,0) then nextstep = 2 end
@@ -357,12 +490,12 @@ local function GotoLumiDung()
         API.DoAction_WalkerW(WPOINT.new(3027 + math.random(-2, 2), 3336 + math.random(-2, 2), 0))
         API.RandomSleep2(1200,300,400) nextstep = nextstep + 1
     elseif  nextstep == 2  then
-        print("Going down the hole GOTO")
             API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder
             API.RandomSleep2(600,200,100) nextstep = nextstep + 1
     elseif nextstep == 3 then
         API.DoAction_Object1(0x39,API.OFF_ACT_GeneralObject_route0,{ 52856 },50) --dungeon door
         API.RandomSleep2(600,200,100) nextstep = nextstep + 1
+        isLumiMine = true
     end
 end
     ::hello::
@@ -382,7 +515,6 @@ local function BankLumiDung()
             API.DoAction_Object1(0x39,API.OFF_ACT_GeneralObject_route0,{ 52866 },50) --dungeon door
             nextMine = nextMine + 1
         elseif nextMine == 1 then
-            print("Going up Banking")
             API.DoAction_Object1(0x35, API.OFF_ACT_GeneralObject_route0, { 6226 }, 50) --LADDER
             nextMine = nextMine + 1
         elseif nextMine == 2 then
@@ -394,7 +526,6 @@ local function BankLumiDung()
     end
     if isDeposit ==true and not API.InvFull_() then
         if nextMine == 3 then
-            print("Going down the hole Banking")
             API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder
             nextMine = nextMine + 1
         elseif nextMine == 4 then
@@ -406,23 +537,22 @@ local function BankLumiDung()
     ::hello::
     API.RandomSleep2(1200,500,400)
 
-end
+end  --- Dung luminite
 local function GotoLumi()
-    if API.CheckAnim(25) then API.RandomSleep2(600, 600, 600) goto hello end
-    if not API.PInArea(2967,8,3403,8,0) and nextstep == 0 then
-        LODESTONE.Falador() API.RandomSleep2(600,200,100) nextstep = nextstep + 1
-    end
     if API.PInArea(2967,8,3403,8,0) then nextstep = 1 end
     if API.PInArea(3027,4,3336,4,0) then nextstep = 2 end
     if API.PInArea(3021,3,9739,3,0) then nextstep = 3 end
     if API.PInArea21(3043,3050,9752,9756) then nextstep = 4 end
     if API.PInArea21(3029,3060,9758,9774) then nextstep = 5 isLumiMine = true end
+    if API.CheckAnim(25) then API.RandomSleep2(600, 600, 600) goto hello end
+    if not API.PInArea(2967,8,3403,8,0) and nextstep == 0 then
+        LODESTONE.Falador() API.RandomSleep2(600,200,100) nextstep = nextstep + 1
+    end
     if nextMine < 1 and isLumiMine == false then
     if API.PInArea(2967,8,3403,8,0) and nextstep == 1 then
         API.DoAction_WalkerW(WPOINT.new(3027 + math.random(-2, 2), 3336 + math.random(-2, 2), 0))
         API.RandomSleep2(1200,300,400) nextstep = nextstep + 1
     elseif  nextstep == 2  then
-        print("Going down the hole GOTO")
             API.DoAction_Object1(0x35,API.OFF_ACT_GeneralObject_route0,{ 2113 },50) --Ladder
             API.RandomSleep2(600,200,100) nextstep = nextstep + 1
         elseif nextstep == 3 then
@@ -482,7 +612,7 @@ local function BankingLumi()
     end
     ::hello::
     API.RandomSleep2(1200,500,400)
-end
+end----End of luminite 
 
 --Start of Runite, Orikalchite, ---
 local function GotoRuneOri()
@@ -542,27 +672,15 @@ local function BankingForRuneOri()
 
     ::hello::
     API.RandomSleep2(1200, 500, 400)
-end
-local function isDungSpot()
-    local DungeonSpot = GUI.GetComponentValue("Special")
-    if DungeonSpot ~= nil and DungeonSpot ~= false and DungeonSpot ~= 0 and DungeonSpot ~= "" then
-        return true
-    end
-    return false
-end
-local function isDropOre()
-    local DungeonSpot = GUI.GetComponentValue("Drop")
-    if DungeonSpot ~= nil and DungeonSpot ~= false and DungeonSpot ~= 0 and DungeonSpot ~= "" then
-        return true
-    end
-    return false
-end
+end --End of Runite, Orikalchite, ---
+
 
 
 --end of Runite, Orikalchite, ---
 local function DoOres()
     local MiningOres = GUI.GetComponentValue("Mining")
     if MiningOres == "Copper" or MiningOres == "Tin" then
+        if not isDungSpot() or isDungSpot() then
         if API.InvItemFound2({ 44779, 44781, 44783, 44785, 44787, 44789, 44791, 44793, 44795, 44797 }) then oreBox = true end
         GotoBurth()
         if isBurthMine == true then
@@ -570,7 +688,9 @@ local function DoOres()
             DepositOres()
         end
     end
+    end
     if MiningOres == "Iron" then
+        if not isDungSpot() or isDungSpot() then
         if API.InvItemFound2({44781, 44783, 44785, 44787, 44789, 44791, 44793, 44795, 44797 }) then oreBox = true end
         GotoBurth()
         if isBurthMine == true then
@@ -578,7 +698,9 @@ local function DoOres()
             DepositOres()
         end
     end
+    end
     if MiningOres == "Coal" then
+        if not isDungSpot() or isDungSpot() then
         if API.InvItemFound2({44783,44785,44787,44789, 44791,44793,44795,44797}) then oreBox = true end
         GotoEdge()
         if isCoalmine == true then
@@ -587,41 +709,47 @@ local function DoOres()
             DepositBarb()
         end
     end
+    end
     if MiningOres == "Mithril" then
+        if not isDungSpot() or isDungSpot() then
         if API.InvItemFound2({44785,44787,44789, 44791,44793,44795,44797}) then oreBox = true end
         GotoMith()
         if isMithmine == true then
             if not API.InvFull_() then MineOre() end
             BankingForMith()
-        end
+        end end
     end
     if MiningOres == "Adamantite" then
-        GotoAdamant()
+        if not isDungSpot() or isDungSpot() then   
         if API.InvItemFound2({44787,44789,44791,44793,44795,44797}) then oreBox = true end
+        GotoAdamant()
         if isAdaMine == true then
             if not API.InvFull_() then 
                 MineOre() 
                 isDeposit = false 
             end
             BankingForAdamant()
-        end
+            end
+         end
     end
     if MiningOres == "Runite" then
+        if not isDungSpot() or isDungSpot() then
        if API.InvItemFound2({44789,44791,44793,44795,44797}) then oreBox = true end
         GotoRuneOri()
         if isRuneMine == true or isOrikalchite == true then
             if not API.InvFull_() then MineOre() end
             BankingForRuneOri()
-        end
+        end end
     end
     if MiningOres == "Orikalchite" then
+        if not isDungSpot() or isDungSpot() then
        if API.InvItemFound2({44791,44793,44795,44797}) then oreBox = true end
         GotoRuneOri()
         if isRuneMine == true or isOrikalchite == true then
             if not API.InvFull_() then MineOre() end
             BankingForRuneOri()
         end
-    end
+    end end
     if MiningOres == "Luminite" then
         if not isDungSpot() then
         if API.InvItemFound2({44789,44791,44793,44795,44797}) then oreBox = true end
@@ -634,13 +762,29 @@ local function DoOres()
             if API.InvItemFound2({44789,44791,44793,44795,44797}) then oreBox = true end
             GotoLumiDung()
             if isLumiMine == true then
-                if not API.InvFull_() and isDeposit == false then MineOre() end
+                if not API.InvFull_() and isDeposit == false 
+                then MineOre() end
                 BankLumiDung()
             end
         end
     end
     if MiningOres == "Drakolith" then
-        print("Mining Drakolith")
+        if not isDungSpot() then
+            if API.InvItemFound2({44791,44793,44795,44797}) then oreBox = true end
+            GotoDrako()
+            if isDrakolith == true then
+                if not API.InvFull_() and isDeposit == false then MineOre() end
+                BankingDrako()
+            end
+        end
+        if isDungSpot()then
+            if API.InvItemFound2({44791,44793,44795,44797}) then oreBox = true end
+           GotoDraDung()
+            if isDrakolith == true then
+                if not API.InvFull_() and isDeposit == false then MineOre() end
+                BankDrak()
+            end
+        end
     end
     if MiningOres == "Banite" then
         print("Mining Banite")
@@ -674,7 +818,7 @@ while (API.Read_LoopyLoop()) do
         API.RandomSleep2(600, 200, 100)
         goto continue
     end
-
+   API.DoRandomEvents()
     idleCheck()
     MonitorMiningOres()
     DoOres()   
