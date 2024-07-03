@@ -40,7 +40,7 @@ GUI.AddBackground("Background", 1, 1, ImColor.new(15, 13, 18, 255))
 GUI.AddLabel("Title", "Free Miner AIO", ImColor.new(255, 255, 255))
 GUI.AddComboBox("Mining", "Ores",
     { "", "Copper", "Tin", "Iron", "Coal", "Mithril", "Adamantite", "Runite", "Luminite", "Orikalchite",
-        "Drakolith", "Necrite", "Phasmatite","Banite",  "Light Animica", "Dark Animica" })
+        "Drakolith", "Necrite", "Phasmatite"}) -- "Banite",  "Light Animica", "Dark Animica" 
 --GUI.AddCheckbox("Bank", "Deposit Ores")
 --GUI.AddCheckbox("Drop", "Drop Ores")
 GUI.AddCheckbox("Special", "Dung Spot")
