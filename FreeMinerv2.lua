@@ -16,6 +16,10 @@ local isBurthMine, isCoalmine, isMithmine, isAdaMine, isRuneMine, isLumiMine   =
 local isOrikalchite, isDrakolith, isBanite, isNecrite, isPhasmatite, isLight, isDark = false, false, false, false, false,
     false, false
 ----
+---
+----
+
+ 
 local previousMiningOres = nil
 local ores = {
     Copper = { 113028, 113027, 113026 },
@@ -233,8 +237,9 @@ local function GotoBurth()
     if API.PInArea(2899, 10, 3544, 10, 0) then nextstep = 1 end     --Burthope
     if API.PInArea(2292, 25, 4516, 25, 0) then nextstep = 2 end     --inside Mining Area
     --Done Checks
+    
     if not API.PInArea(2899, 2, 3544, 2, 0) and nextstep == 0 then
-        LODESTONE.Burthope()
+        LODESTONE.BURTHOPE.Teleport()
         nextstep = 1
     end
     if API.PInArea(2899, 10, 3544, 10, 0) and nextstep == 1 then
@@ -284,7 +289,7 @@ local function GotoEdge()
     if API.PInArea(3080, 10, 3422, 10, 0) then nextstep = 2 end
     --End of values
     if not API.PInArea(3067, 4, 3505, 4, 0) and nextstep == 0 then
-        LODESTONE.Edgeville()
+        LODESTONE.EDGEVILLE.Teleport()
         nextstep = 1
     end
     if API.PInArea(3067, 10, 3505, 10, 0) and nextstep == 1 then
@@ -312,7 +317,7 @@ local function GotoMith()
     if API.PInArea(3214, 15, 3376, 15, 0) then nextstep = 1 end
     --End of Values
     if not API.PInArea(3214,4,3376,4,0) and nextstep == 0 then
-        LODESTONE.Varrock()
+        LODESTONE.VARROCK.Teleport()
         nextstep = 1
     end
     if API.PInArea(3214, 15, 3376, 15, 0) and nextstep == 1  then nextstep = 2 isMithmine = true  print("Reach Mining Area ") end
@@ -341,7 +346,7 @@ local function GotoAdamant()
     if API.PInArea(3011,10,3215,10,0) then nextstep = 1 end
     if API.PInArea(2974,10,3233,10,0) then nextstep = 2 isAdaMine = true end
     if not API.PInArea(3011,10,3215,10,0) and nextstep == 0 then
-        LODESTONE.PortSarim()
+        LODESTONE.PORT_SARIM.Teleport()
         nextstep = 1
     end
     if API.PInArea(3011,4,3215,4,0) and nextstep == 1 then nextstep= 2 isAdaMine = true print("Reach Adamant Area ") end
@@ -352,7 +357,7 @@ local function BankingForAdamant()
     if API.PInArea(3297,10,3184,10,0) then nextMine = 1 end
     if isDeposit == false and API.InvFull_() then
         if nextMine == 0 then
-            LODESTONE.AlKharid()
+            LODESTONE.AL_KHARID.Teleport()
             API.RandomSleep2(600, 100, 100)
             nextMine = 1
         elseif API.PInArea(3297,10,3184,10,0) and nextMine == 1 then
@@ -374,7 +379,8 @@ if API.PInArea21(1048,1066,4504,4523) then nextstep = 4 isDrakolith = true end -
    
     if API.CheckAnim(25) then API.RandomSleep2(600, 600, 600) goto hello end
     if not API.PInArea(2967,8,3403,8,0) and nextstep == 0 then
-        LODESTONE.Falador() API.RandomSleep2(600,200,100) nextstep = nextstep + 1
+        LODESTONE.FALADOR.Teleport()
+        API.RandomSleep2(600,200,100) nextstep = nextstep + 1
     end
    
     if nextMine < 1 and isDrakolith == false then
@@ -436,7 +442,7 @@ if API.PInArea(3143,4,3635,4,0) then nextstep = 1 end-- Wildy spot
 if API.PInArea21(3181,3190,3630,3636) then nextstep = 2 end -- Drak Spot 
     if API.CheckAnim(25) then API.RandomSleep2(600, 600, 600) goto hello end
     if not API.PInArea(3143,4,3635,4,0) and nextstep == 0 then
-        LODESTONE.Wilderness()
+        LODESTONE.WILDERNESS.Teleport()
         nextstep = nextstep + 1
     end
     if nextMine < 1 and isDrakolith == false then
@@ -462,7 +468,7 @@ local function BankingDrako()
     if API.CheckAnim(25) then API.RandomSleep2(600, 200, 100) goto hello end
     if isDeposit == false and API.InvFull_() then
         if nextMine == 0 then
-            LODESTONE.AlKharid() nextMine = nextMine + 1
+            LODESTONE.AL_KHARID.Teleport() nextMine = nextMine + 1
         elseif nextMine == 1 then
             API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route1,{ 76293 },50) --alkharid forge
             isDeposit = true
@@ -471,7 +477,7 @@ local function BankingDrako()
     end
     if isDeposit == true  and not API.InvFull_() then
         if nextMine == 2 then
-            LODESTONE.Wilderness() nextMine = nextMine+1 
+            LODESTONE.WILDERNESS.Teleport() nextMine = nextMine+1 
         elseif API.PInArea(3143,4,3635,4,0) and nextMine == 3 then
             goToTile(3186,3632,0) 
             nextMine = nextMine + 1
@@ -492,7 +498,7 @@ local function GotoLumiDung()
     if API.PInArea(1054,10,4516,10,0) then nextstep = 4 isLumiMine = true end
     if API.CheckAnim(25) then API.RandomSleep2(600,300, 200) goto hello end
     if not API.PInArea(2967,8,3403,8,0) and nextstep == 0 then
-        LODESTONE.Falador() API.RandomSleep2(600,200,100) nextstep = nextstep + 1
+        LODESTONE.FALADOR.Teleport()API.RandomSleep2(600,200,100) nextstep = nextstep + 1
     end
    
     if nextMine < 1 and isLumiMine == false then
@@ -556,7 +562,7 @@ local function GotoLumi()
     if API.PInArea21(3029,3060,9758,9774) then nextstep = 5 isLumiMine = true end
     if API.CheckAnim(25) then API.RandomSleep2(600,300, 200) goto hello end
     if not API.PInArea(2967,8,3403,8,0) and nextstep == 0 then
-        LODESTONE.Falador() API.RandomSleep2(600,200,100) nextstep = nextstep + 1
+        LODESTONE.FALADOR.Teleport() API.RandomSleep2(600,200,100) nextstep = nextstep + 1
     end
     if nextMine < 1 and isLumiMine == false then
     if API.PInArea(2967,8,3403,8,0) and nextstep == 1 then
@@ -632,7 +638,7 @@ local function GotoRuneOri()
     if API.PInArea(3021,25,9739,25,0) then nextstep = 3 isRuneMine = true isOrikalchite = true end
         
     if not API.PInArea(2967,8,3403,8,0) and nextstep == 0 then
-        LODESTONE.Falador() API.RandomSleep2(600,200,100) nextstep = 1
+        LODESTONE.FALADOR.Teleport() API.RandomSleep2(600,200,100) nextstep = 1
     end
     if API.PInArea(2967,8,3403,8,0) and nextstep == 1 then
         API.DoAction_WalkerW(WPOINT.new(3027 + math.random(-2, 2), 3336 + math.random(-2, 2), 0))
@@ -692,7 +698,7 @@ local function GotoNecrite()
     if API.PInArea(3307,5,3109,4,0) then nextstep = 2 end
     if API.PInArea(3460,10,3137,10,0) then nextstep = 3 isNecrite = true end
     if not API.PInArea(3297,4,3184,3,0) and nextstep == 0 then
-        LODESTONE.AlKharid()
+        LODESTONE.AL_KHARID.Teleport()
         nextstep = nextstep + 1
     end
     if nextMine < 1 and isNecrite == false then
@@ -719,7 +725,8 @@ local function BankNecrite()
     if API.CheckAnim(25) then  goto hello end
     if isDeposit == false and API.InvFull_() then
         if nextMine == 0 then
-            LODESTONE.AlKharid() nextMine = nextMine + 1
+            LODESTONE.AL_KHARID.Teleport() 
+            nextMine = nextMine + 1
         elseif nextMine == 1 then
             API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route1,{ 76293 },50) --alkharid forge
             isDeposit = true
@@ -749,7 +756,7 @@ local function GotoPhasmatite()
     if API.PInArea(3517,4,3515,4,0) then nextstep = 1 end
     if API.PInArea(3690,10,3397,10,0) then nextstep = 2 isPhasmatite = true end
     if not API.PInArea(3517,4,3515,4,0) and nextstep == 0 then
-        LODESTONE.Canifis()
+        LODESTONE.CANIFIS.Teleport()
         nextstep = nextstep + 1
     end
     if nextMine < 1 and isPhasmatite == false then
@@ -765,14 +772,14 @@ local function GotoPhasmatite()
 API.RandomSleep2(600,100,100)
 end
 local function BankPhaste()
-    if API.PInArea(3690,10,3397,10,0) and API.InvFull_() then nextMine = 0 end
+    if API.PInArea(3690,10,3397,10,0) and API.InvFull_() then nextMine = 0 end --mining spot 
     if API.PInArea(3297,10,3184,10,0) and API.InvFull_() then nextMine = 1 end --alkharid spot
-    if API.PInArea(3517,4,3515,4,0) and not API.InvFull_() then nextMine = 2 end --furnace
+    if API.PInArea(3517,4,3515,4,0) and not API.InvFull_() then nextMine = 3 end --furnace
     if API.PInArea(3690,10,3397,10,0) and not API.InvFull_() then nextMine = 0  isDeposit = false end
     if API.CheckAnim(25) then  goto hello end
     if isDeposit == false and API.InvFull_() then
         if nextMine == 0 then
-            LODESTONE.AlKharid() nextMine = nextMine + 1
+            LODESTONE.AL_KHARID.Teleport() nextMine = nextMine + 1
         elseif nextMine == 1 then
             API.DoAction_Object1(0x29,API.OFF_ACT_GeneralObject_route1,{ 76293 },50) --alkharid forge
             isDeposit = true
@@ -781,9 +788,11 @@ local function BankPhaste()
     end
     if isDeposit == true and not API.InvFull_() then
         if nextMine == 2 then
+            LODESTONE.CANIFIS.Teleport() nextMine = nextMine+1
+        elseif API.PInArea(3517,4,3515,4,0) then
             API.DoAction_WalkerW(WPOINT.new(3690 + math.random(-2, 2), 3397 + math.random(-2, 2), 0))
             nextMine = nextMine+1
-        elseif nextMine == 3 and API.PInArea(3690,10,3397,10,0) then
+        elseif nextMine == 4 and API.PInArea(3690,10,3397,10,0) then
             nextMine = 0
             isDeposit = false
         end
@@ -952,11 +961,11 @@ while (API.Read_LoopyLoop()) do
     if API.ReadPlayerMovin2() then
         goto continue
     end
-   API.DoRandomEvents()
+   API.DoRandomEvents(50,300)
    isLoggedout()
     idleCheck()
     MonitorMiningOres()
-    DoOres()   
+    DoOres()
     ::continue::
     API.RandomSleep2(600, 200, 200)
 end
